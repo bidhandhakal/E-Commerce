@@ -10,11 +10,11 @@ export function ClientProviders({ children }: { children: ReactNode }) {
     return (
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
             <AuthProvider>
-                <CartProvider>
-                    <ConvexAuthProvider>
+                <ConvexAuthProvider>
+                    <CartProvider>
                         {children}
-                    </ConvexAuthProvider>
-                </CartProvider>
+                    </CartProvider>
+                </ConvexAuthProvider>
             </AuthProvider>
         </ThemeProvider>
     );

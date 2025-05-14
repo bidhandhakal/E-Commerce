@@ -25,5 +25,28 @@ export default defineSchema({
         .index("by_clerk_id", ["clerkId"])
         .index("by_email", ["email"]),
 
+    // Table to store user cart items
+    cartItems: defineTable({
+        // The user ID this cart item belongs to
+        userId: v.id("users"),
+        // Product details
+        productId: v.string(),
+        name: v.string(),
+        price: v.number(),
+        originalPrice: v.optional(v.number()),
+        image: v.string(),
+        category: v.string(),
+        // Quantity of this item in the cart
+        quantity: v.number(),
+        // Product variations
+        size: v.optional(v.string()),
+        color: v.optional(v.string()),
+        // Timestamps
+        createdAt: v.number(),
+        updatedAt: v.number(),
+    })
+        .index("by_user", ["userId"])
+        .index("by_user_and_product", ["userId", "productId"]),
+
     // You can add more tables as needed here
 }); 
