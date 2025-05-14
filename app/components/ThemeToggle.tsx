@@ -138,7 +138,7 @@ export default function ThemeToggle() {
     return (
         <button
             onClick={toggleTheme}
-            className={`flex items-center justify-center w-10 h-10 rounded-full bg-secondary hover:bg-secondary/80 transition-colors relative overflow-hidden ${isTransitioning ? 'pointer-events-none' : ''}`}
+            className={`flex items-center justify-center w-10 h-10 rounded-full bg-secondary hover:bg-secondary/80 transition-colors relative overflow-hidden cursor-pointer ${isTransitioning ? 'pointer-events-none' : ''}`}
             aria-label="Toggle theme"
             disabled={isTransitioning}
         >

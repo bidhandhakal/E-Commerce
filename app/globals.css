@@ -163,6 +163,7 @@
     font-family: var(--font-montserrat);
     font-weight: 600;
     letter-spacing: 0.01em;
+    cursor: pointer;
   }
 }
 
@@ -264,4 +265,27 @@ nav .brand-title {
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+/* Interactive element styles */
+.hover-cursor {
+  cursor: pointer;
+}
+
+.interactive-element {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.interactive-element:hover {
+  transform: translateY(-2px);
+  cursor: pointer;
+}
+
+/* Link style cursor for clickable elements */
+.link-cursor {
+  cursor: pointer;
+}
+
+.link-cursor:hover {
+  cursor: pointer;
 }

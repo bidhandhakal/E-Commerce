@@ -74,14 +74,14 @@ export default function AddToCartButton({
 
     // Button variant classes
     const variantClasses = {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
-        outline: "border border-primary text-primary hover:bg-primary/10",
-        subtle: "bg-primary/10 text-primary hover:bg-primary/20",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-105",
+        outline: "border border-primary text-primary hover:bg-primary/10 hover:scale-105",
+        subtle: "bg-primary/10 text-primary hover:bg-primary/20 hover:scale-105",
     };
 
     // Combined classes based on props
     const buttonClasses = cn(
-        "rounded-md font-medium transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed",
+        "rounded-md font-medium transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer hover:shadow-sm",
         sizeClasses[size],
         variantClasses[variant],
         className
@@ -107,7 +107,12 @@ export default function AddToCartButton({
             )}
             {!isAdding && !isAdded && (
                 <>
-                    {showIcon && <ShoppingCart size={size === "sm" ? 14 : size === "md" ? 16 : 18} />}
+                    {showIcon && (
+                        <ShoppingCart
+                            size={size === "sm" ? 14 : size === "md" ? 16 : 18}
+                            className="transition-transform group-hover:scale-110"
+                        />
+                    )}
                     Add to Cart
                 </>
             )}
