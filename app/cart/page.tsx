@@ -1,12 +1,43 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Minus, Plus, Trash2, ArrowRight } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
+import { useRouter } from "next/navigation";
 
 export default function CartPage() {
     const { cartItems, updateQuantity, removeFromCart, getCartTotal } = useCart();
+    const { isSignedIn, requireAuth } = useAuth();
+    const router = useRouter();
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const checkAuth = async () => {
+            setIsLoading(true);
+            const isAuthorized = await requireAuth("You need to sign in to view your cart.");
+            if (!isAuthorized) {
+                router.push("/");
+            }
+            setIsLoading(false);
+        };
+
+        checkAuth();
+    }, [requireAuth, router]);
+
+    if (isLoading) {
+        return (
+            <div className="flex min-h-[50vh] items-center justify-center">
+                <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+            </div>
+        );
+    }
+
+    if (!isSignedIn) {
+        return null; // Will be redirected by the useEffect
+    }
 
     // Calculate subtotal
     const subtotal = getCartTotal();

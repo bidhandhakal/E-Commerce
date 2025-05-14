@@ -1,11 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X, ShoppingCart, ShoppingBag } from "lucide-react";
+import { Menu, X, ShoppingCart, ShoppingBag, LogIn, LogOut, User } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
+import { useRouter } from "next/navigation";
+import { useAuth as useClerkAuth, SignOutButton, useClerk, UserButton } from "@clerk/nextjs";
 
 const navLinks = [
     { name: "Home", href: "/" },
@@ -22,7 +25,13 @@ export default function Navbar() {
     const [visible, setVisible] = useState(true);
     const [imageError, setImageError] = useState(false);
     const { getCartCount } = useCart();
+    const { requireAuth } = useAuth();
+    const { isSignedIn } = useClerkAuth();
+    const router = useRouter();
     const cartItemsCount = getCartCount();
+    const [showSignIn, setShowSignIn] = useState(false);
+    const redirectRef = useRef(null);
+    const clerk = useClerk();
 
     // Handle scroll events
     useEffect(() => {
@@ -55,6 +64,38 @@ export default function Navbar() {
     const navbarClasses = `sticky z-50 w-full bg-background/80 backdrop-blur-md border-b border-border transition-transform duration-300 ${visible ? "top-0 translate-y-0" : "-translate-y-full"
         }`;
 
+    const handleCartClick = async (e: React.MouseEvent) => {
+        if (!isSignedIn) {
+            e.preventDefault();
+            await requireAuth("You need to sign in to view your cart.");
+        } else {
+            router.push("/cart");
+        }
+    };
+
+    const handleSignOut = () => {
+        // This function is no longer needed as we'll use Clerk's SignOutButton
+        // but keep it to avoid breaking changes
+    };
+
+    const handleSignInClick = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        try {
+            await clerk.openSignIn();
+        } catch (error) {
+            console.error("Error redirecting to sign in:", error);
+        }
+    };
+
+    const handleSignUpClick = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        try {
+            await clerk.openSignUp();
+        } catch (error) {
+            console.error("Error redirecting to sign up:", error);
+        }
+    };
+
     return (
         <nav className={navbarClasses}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -82,9 +123,9 @@ export default function Navbar() {
                         </Link>
                     </div>
 
-                    {/* Desktop Nav Links */}
-                    <div className="hidden md:block">
-                        <div className="ml-10 flex items-center space-x-8">
+                    {/* Desktop Nav Links - centered */}
+                    <div className="hidden md:block flex-1 mx-8">
+                        <div className="flex items-center justify-center space-x-8">
                             {navLinks.map((link) => (
                                 <Link
                                     key={link.name}
@@ -97,23 +138,63 @@ export default function Navbar() {
                         </div>
                     </div>
 
-                    {/* Theme Toggle, Cart, and Mobile Menu Button */}
+                    {/* Right side items */}
                     <div className="flex items-center gap-3">
+                        {/* ThemeToggle */}
                         <ThemeToggle />
 
                         {/* Cart Button */}
-                        <Link
-                            href="/cart"
-                            className="relative p-2 rounded-md hover:bg-secondary transition-colors"
+                        <button
+                            onClick={handleCartClick}
+                            className="relative p-2 transition-colors hover:text-primary"
                             aria-label="View shopping cart"
                         >
                             <ShoppingCart size={24} className="text-foreground" />
-                            {cartItemsCount > 0 && (
-                                <span className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-bold">
+                            {cartItemsCount > 0 && isSignedIn && (
+                                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
                                     {cartItemsCount}
                                 </span>
                             )}
-                        </Link>
+                        </button>
+
+                        {/* Sign in/up buttons for non-signed in users on desktop */}
+                        {!isSignedIn && (
+                            <div className="hidden md:flex md:items-center gap-2">
+                                <button
+                                    onClick={handleSignInClick}
+                                    className="flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-secondary"
+                                >
+                                    <LogIn size={16} className="mr-1" />
+                                    Sign In
+                                </button>
+                                <button
+                                    onClick={handleSignUpClick}
+                                    className="flex items-center gap-1 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                                >
+                                    Sign Up
+                                </button>
+                            </div>
+                        )}
+
+                        {/* User Button for signed in users */}
+                        {isSignedIn && (
+                            <div className="hidden md:block">
+                                <UserButton
+                                    afterSignOutUrl="/"
+                                    appearance={{
+                                        elements: {
+                                            avatarBox: "h-9 w-9",
+                                            userButtonBox: "focus:shadow-none",
+                                            userButtonTrigger: "focus:shadow-none focus-visible:ring-2 focus-visible:ring-primary rounded-full",
+                                            userButtonPopoverCard: "shadow-lg border border-border bg-card rounded-lg",
+                                            userButtonPopoverFooter: "border-t border-border",
+                                            userButtonPopoverActionButton: "text-foreground hover:bg-secondary/50 rounded-md",
+                                            userButtonPopoverActionButtonText: "text-foreground font-medium",
+                                        }
+                                    }}
+                                />
+                            </div>
+                        )}
 
                         {/* Mobile menu button */}
                         <button
@@ -146,6 +227,49 @@ export default function Navbar() {
                             {link.name}
                         </Link>
                     ))}
+                </div>
+
+                <div className="mt-4 border-t border-border pt-4 px-4 space-y-2">
+                    {isSignedIn ? (
+                        <div className="flex justify-center my-2">
+                            <UserButton
+                                afterSignOutUrl="/"
+                                appearance={{
+                                    elements: {
+                                        avatarBox: "h-10 w-10",
+                                        userButtonBox: "focus:shadow-none",
+                                        userButtonTrigger: "focus:shadow-none focus-visible:ring-2 focus-visible:ring-primary rounded-full",
+                                        userButtonPopoverCard: "shadow-lg border border-border bg-card rounded-lg",
+                                        userButtonPopoverFooter: "border-t border-border",
+                                        userButtonPopoverActionButton: "text-foreground hover:bg-secondary/50 rounded-md",
+                                        userButtonPopoverActionButtonText: "text-foreground font-medium",
+                                    }
+                                }}
+                            />
+                        </div>
+                    ) : (
+                        <>
+                            <button
+                                onClick={(e) => {
+                                    setIsMenuOpen(false);
+                                    handleSignInClick(e);
+                                }}
+                                className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-secondary transition-colors w-full"
+                            >
+                                <LogIn size={18} />
+                                Sign In
+                            </button>
+                            <button
+                                onClick={(e) => {
+                                    setIsMenuOpen(false);
+                                    handleSignUpClick(e);
+                                }}
+                                className="flex items-center justify-center px-3 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors w-full"
+                            >
+                                Sign Up
+                            </button>
+                        </>
+                    )}
                 </div>
             </div>
         </nav>

@@ -10,7 +10,7 @@ export default function Home() {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://images.unsplash.com/photo-1523381294911-8d3cead13475?w=2000&auto=format&fit=crop&q=80"
+            src="/shirt.jfif"
             alt="T-shirt collection background"
             fill
             priority

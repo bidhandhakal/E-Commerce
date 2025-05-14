@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Heart, ShoppingCart, Check } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 
 interface ProductCardProps {
     id: string;
@@ -29,31 +30,35 @@ export default function ProductCard({
 }: ProductCardProps) {
     const [addedToCart, setAddedToCart] = useState(false);
     const { addToCart } = useCart();
+    const { requireAuth } = useAuth();
 
     const discount = originalPrice
         ? Math.round(((originalPrice - price) / originalPrice) * 100)
         : 0;
 
-    const handleAddToCart = () => {
-        // Add item to cart
-        addToCart({
-            id,
-            name,
-            price,
-            originalPrice,
-            image,
-            category,
-            size: "M", // Default size
-            color: "Default", // Default color
-        });
+    const handleAddToCart = async () => {
+        const isAuthorized = await requireAuth("You need to sign in to add items to your cart.");
 
-        // Show added confirmation
-        setAddedToCart(true);
+        if (isAuthorized) {
+            // Add item to cart
+            addToCart({
+                id,
+                name,
+                price,
+                originalPrice,
+                image,
+                category,
+                size: "M", // Default size
+                color: "Default", // Default color
+            });
 
-        // Reset the added state after 2 seconds
-        setTimeout(() => {
-            setAddedToCart(false);
-        }, 2000);
+            setAddedToCart(true);
+
+            // Reset the "Added" state after 2 seconds
+            setTimeout(() => {
+                setAddedToCart(false);
+            }, 2000);
+        }
     };
 
     return (
