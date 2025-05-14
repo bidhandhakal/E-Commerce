@@ -140,8 +140,10 @@ export default function Navbar() {
 
                     {/* Right side items */}
                     <div className="flex items-center gap-3">
-                        {/* ThemeToggle */}
-                        <ThemeToggle />
+                        {/* ThemeToggle - only visible on desktop */}
+                        <div className="hidden md:block">
+                            <ThemeToggle />
+                        </div>
 
                         {/* Cart Button */}
                         <button
@@ -176,24 +178,22 @@ export default function Navbar() {
                             </div>
                         )}
 
-                        {/* User Button for signed in users */}
+                        {/* User Button for signed in users - visible on both mobile and desktop */}
                         {isSignedIn && (
-                            <div className="hidden md:block">
-                                <UserButton
-                                    afterSignOutUrl="/"
-                                    appearance={{
-                                        elements: {
-                                            avatarBox: "h-9 w-9",
-                                            userButtonBox: "focus:shadow-none",
-                                            userButtonTrigger: "focus:shadow-none focus-visible:ring-2 focus-visible:ring-primary rounded-full",
-                                            userButtonPopoverCard: "shadow-lg border border-border bg-card rounded-lg",
-                                            userButtonPopoverFooter: "border-t border-border",
-                                            userButtonPopoverActionButton: "text-foreground hover:bg-secondary/50 rounded-md",
-                                            userButtonPopoverActionButtonText: "text-foreground font-medium",
-                                        }
-                                    }}
-                                />
-                            </div>
+                            <UserButton
+                                afterSignOutUrl="/"
+                                appearance={{
+                                    elements: {
+                                        avatarBox: "h-9 w-9",
+                                        userButtonBox: "focus:shadow-none",
+                                        userButtonTrigger: "focus:shadow-none focus-visible:ring-2 focus-visible:ring-primary rounded-full",
+                                        userButtonPopoverCard: "shadow-lg border border-border bg-card rounded-lg",
+                                        userButtonPopoverFooter: "border-t border-border",
+                                        userButtonPopoverActionButton: "text-foreground hover:bg-secondary/50 rounded-md",
+                                        userButtonPopoverActionButtonText: "text-foreground font-medium",
+                                    }
+                                }}
+                            />
                         )}
 
                         {/* Mobile menu button */}
@@ -230,24 +230,13 @@ export default function Navbar() {
                 </div>
 
                 <div className="mt-4 border-t border-border pt-4 px-4 space-y-2">
-                    {isSignedIn ? (
-                        <div className="flex justify-center my-2">
-                            <UserButton
-                                afterSignOutUrl="/"
-                                appearance={{
-                                    elements: {
-                                        avatarBox: "h-10 w-10",
-                                        userButtonBox: "focus:shadow-none",
-                                        userButtonTrigger: "focus:shadow-none focus-visible:ring-2 focus-visible:ring-primary rounded-full",
-                                        userButtonPopoverCard: "shadow-lg border border-border bg-card rounded-lg",
-                                        userButtonPopoverFooter: "border-t border-border",
-                                        userButtonPopoverActionButton: "text-foreground hover:bg-secondary/50 rounded-md",
-                                        userButtonPopoverActionButtonText: "text-foreground font-medium",
-                                    }
-                                }}
-                            />
-                        </div>
-                    ) : (
+                    {/* ThemeToggle added to mobile menu */}
+                    <div className="flex justify-center my-4">
+                        <ThemeToggle />
+                    </div>
+
+                    {/* Keep the sign-in/sign-up buttons in mobile menu but remove UserButton */}
+                    {!isSignedIn && (
                         <>
                             <button
                                 onClick={(e) => {
