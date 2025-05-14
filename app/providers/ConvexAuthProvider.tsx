@@ -7,8 +7,8 @@ import { useConvexAuth } from "../hooks/useConvexAuth";
 interface ConvexAuthContextType {
     isLoaded: boolean;
     isAuthenticated: boolean;
-    user: any; // Convex user data
-    clerkUser: any; // Clerk user object
+    user: unknown; // Convex user data
+    clerkUser: unknown; // Clerk user object
 }
 
 // Create the context with a default value
