@@ -121,10 +121,20 @@
     @apply border-border outline-ring/50;
   }
 
+  html,
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-montserrat);
     letter-spacing: -0.01em;
+  }
+
+  /* Ensures the background loads immediately to prevent white flashes */
+  html::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-color: var(--background);
   }
 
   h1,
@@ -154,6 +164,37 @@
     font-weight: 600;
     letter-spacing: 0.01em;
   }
+}
+
+/* Loading Screen Animations */
+@keyframes circleRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.circle-loader {
+  animation: circleRotate 2s linear infinite;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.5s ease forwards;
 }
 
 /* Improved Navbar Styling */

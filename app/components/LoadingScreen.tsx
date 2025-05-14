@@ -1,100 +1,154 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useLayoutEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
+
+// Fixed display time for the loading screen in milliseconds (4 seconds)
+const FIXED_LOADING_TIME = 4000;
 
 export default function LoadingScreen() {
     const [isLoading, setIsLoading] = useState(true);
     const [progress, setProgress] = useState(0);
-    const [isFirstLoad, setIsFirstLoad] = useState(true);
+    const [isVisible, setIsVisible] = useState(true);
     const [isDark, setIsDark] = useState(false);
+    const loadingRef = useRef<NodeJS.Timeout | null>(null);
+    const [animationComplete, setAnimationComplete] = useState(false);
 
-    useEffect(() => {
-        // Check if this is the first load of the session
-        const hasLoadedBefore = sessionStorage.getItem("hasLoadedBefore");
-
-        if (hasLoadedBefore) {
-            // Skip loading screen if not first load
-            setIsLoading(false);
-            setIsFirstLoad(false);
-            return;
-        }
-
-        // Check theme
+    // Immediately set up critical rendering to prevent blank screen
+    useLayoutEffect(() => {
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
         const savedTheme = localStorage.getItem("theme");
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        setIsDark(savedTheme === "dark" || (!savedTheme && prefersDark));
+        const isDarkMode = savedTheme === "dark" || (!savedTheme && prefersDark);
 
-        // Set flag to indicate the site has been loaded in this session
-        sessionStorage.setItem("hasLoadedBefore", "true");
+        // Apply background color directly
+        document.documentElement.style.backgroundColor =
+            isDarkMode ? 'oklch(1 0 0)' : 'oklch(0.141 0.005 285.823)';
+        document.body.style.backgroundColor =
+            isDarkMode ? 'oklch(1 0 0)' : 'oklch(0.141 0.005 285.823)';
 
-        // Simulate loading progress
-        const interval = setInterval(() => {
-            setProgress((prevProgress) => {
-                if (prevProgress >= 100) {
-                    clearInterval(interval);
-                    setTimeout(() => setIsLoading(false), 500); // Add a small delay for smooth transition
-                    return 100;
-                }
-                return prevProgress + 5;
-            });
-        }, 120);
-
-        return () => clearInterval(interval);
+        setIsDark(isDarkMode);
     }, []);
 
-    // Don't render anything if not loading or not first load
-    if (!isLoading || !isFirstLoad) return null;
+    useEffect(() => {
+        // Always show the loading screen on every visit
+        // No longer checking for "hasLoadedBefore"
+
+        // Animate loading sequence
+        const startTime = Date.now();
+
+        // Update loading progress
+        const progressInterval = setInterval(() => {
+            const elapsed = Date.now() - startTime;
+            const progressPercent = Math.min((elapsed / FIXED_LOADING_TIME) * 100, 100);
+
+            // Update progress bar
+            setProgress(progressPercent);
+
+            // Complete the loading sequence
+            if (elapsed >= FIXED_LOADING_TIME) {
+                clearInterval(progressInterval);
+                setProgress(100);
+
+                // Animate out after loading completes
+                setTimeout(() => {
+                    setIsLoading(false);
+                    setTimeout(() => {
+                        setAnimationComplete(true);
+                        // Wait for animation to complete before unmounting
+                        setTimeout(() => setIsVisible(false), 800);
+                    }, 200);
+                }, 300);
+            }
+        }, 50);
+
+        loadingRef.current = progressInterval;
+
+        return () => {
+            if (loadingRef.current) clearInterval(loadingRef.current);
+        };
+    }, []);
+
+    // Exit if not visible
+    if (!isVisible) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background transition-colors">
-            <div className="relative w-32 h-32">
-                <div className="absolute inset-0 w-full h-full flex items-center justify-center">
-                    <svg
-                        className="w-full h-full"
-                        viewBox="0 0 256 256"
-                        xmlns="http://www.w3.org/2000/svg"
+        <AnimatePresence mode="wait">
+            {isVisible && (
+                <>
+                    {/* Main content that will slide up */}
+                    <motion.div
+                        key="loading-content"
+                        initial={{ opacity: 1 }}
+                        animate={{
+                            opacity: animationComplete ? 0 : 1,
+                            y: animationComplete ? -60 : 0
+                        }}
+                        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                        className="fixed inset-0 z-[9999] flex flex-col items-center justify-center"
+                        style={{
+                            backgroundColor: 'transparent'
+                        }}
                     >
-                        <rect
-                            width="256"
-                            height="256"
-                            rx="60"
-                            className="text-primary fill-current"
-                        />
-                        <path
-                            d="M178 60h-36l-4 14h-20l-4-14H78c-3 0-5 3-4 6l12 32c1 2 3 3 5 3h10v84c0 3 3 6 6 6h48c3 0 6-3 6-6v-84h10c2 0 4-1 5-3l12-32c1-3-1-6-4-6z"
-                            fill="white"
-                        />
-                        <path
-                            d="M128 116c-8 0-14 1-19 4-5 3-7 7-7 12 0 4 1 7 4 9 3 2 7 4 12 5 4 1 7 2 9 3 2 1 3 2 3 4 0 1-1 3-2 4-1 1-3 1-6 1-4 0-6-1-8-2-2-1-3-3-3-6h-10c0 5 2 9 5 12 4 3 9 4 16 4 7 0 13-1 17-4 4-3 6-7 6-12 0-4-1-7-4-9-2-2-6-4-11-5-4-1-7-2-9-3-2-1-3-2-3-4 0-1 1-2 2-3 1-1 3-2 6-2 3 0 5 1 7 2 2 1 3 3 3 5h10c0-4-2-8-5-11-3-3-8-4-15-4z"
-                            className={isDark ? "fill-white" : "fill-black"}
-                        />
-                        <path
-                            d="M114 65h28M114 70h28"
-                            stroke="white"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                        />
-                    </svg>
-                </div>
-            </div>
+                        <div className="relative z-10 flex flex-col items-center max-w-lg px-6 text-center">
+                            {/* Logo */}
+                            <motion.div
+                                className="mb-6"
+                                initial={{ scale: 0.8, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                transition={{ duration: 0.5 }}
+                            >
+                                <Image
+                                    src="https://cdn-icons-png.flaticon.com/512/8576/8576248.png"
+                                    alt="Loading icon"
+                                    width={192}
+                                    height={192}
+                                    priority
+                                />
+                            </motion.div>
 
-            <h1 className="mt-6 text-2xl font-bold text-foreground animate-pulse">
-                Pyuto
-            </h1>
+                            {/* Brand name instead of loading text */}
+                            <motion.h1
+                                className="text-5xl font-bold mb-10 font-montserrat tracking-wider"
+                                initial={{ opacity: 0, y: 5 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, delay: 0.2 }}
+                                style={{ color: isDark ? '#141015' : 'white' }}
+                            >
+                                PYUTO
+                            </motion.h1>
 
-            <div className="w-64 h-3 mt-8 rounded-full bg-muted overflow-hidden">
-                <div
-                    className="h-full bg-primary transition-all duration-300 ease-out"
-                    style={{ width: `${progress}%` }}
-                />
-            </div>
+                            {/* Progress bar */}
+                            <div className="w-64 h-1 bg-opacity-20 rounded-full overflow-hidden relative"
+                                style={{ backgroundColor: isDark ? 'rgba(20, 16, 21, 0.2)' : 'rgba(255, 255, 255, 0.2)' }}>
+                                <motion.div
+                                    className="h-full rounded-full"
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${progress}%` }}
+                                    transition={{ duration: 0.3 }}
+                                    style={{ backgroundColor: isDark ? '#141015' : 'white' }}
+                                />
+                            </div>
+                        </div>
+                    </motion.div>
 
-            <p className="mt-4 text-sm text-muted-foreground">
-                {progress < 30 ? "Loading amazing styles..." :
-                    progress < 60 ? "Preparing your experience..." :
-                        progress < 90 ? "Almost there..." :
-                            "Welcome to Pyuto!"}
-            </p>
-        </div>
+                    {/* Background that slides up to reveal the main site */}
+                    <motion.div
+                        key="loading-bg"
+                        className="fixed inset-0 z-[9998] pointer-events-none"
+                        initial={{ y: 0 }}
+                        animate={{ y: animationComplete ? "-100%" : 0 }}
+                        transition={{
+                            duration: 0.8,
+                            ease: [0.22, 1, 0.36, 1], // Custom cubic bezier for smooth slide
+                            delay: 0.1
+                        }}
+                        style={{
+                            backgroundColor: isDark ? 'oklch(1 0 0)' : 'oklch(0.141 0.005 285.823)',
+                        }}
+                    />
+                </>
+            )}
+        </AnimatePresence>
     );
 } 
