@@ -115,7 +115,7 @@ export default function LoadingScreen() {
                                 transition={{ duration: 0.5, delay: 0.2 }}
                                 style={{ color: isDark ? '#141015' : 'white' }}
                             >
-                                PYUTO
+                                Cookware
                             </motion.h1>
 
                             {/* Progress bar */}

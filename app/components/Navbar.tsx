@@ -118,7 +118,7 @@ export default function Navbar() {
                                 </div>
                             )}
                             <span className="brand-title text-foreground">
-                                Pyuto
+                                Cookware
                             </span>
                         </Link>
                     </div>

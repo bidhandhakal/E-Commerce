@@ -6,7 +6,7 @@ const featuredProducts = [
     {
         id: "t1",
         name: "Classic White T-Shirt",
-        price: 24.99,
+        price: 1299,
         image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&auto=format&fit=crop&q=80",
         category: "Men's T-Shirts",
         isNew: true,
@@ -14,15 +14,15 @@ const featuredProducts = [
     {
         id: "t5",
         name: "Graphic Print T-Shirt",
-        price: 27.99,
+        price: 1499,
         image: "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=800&auto=format&fit=crop&q=80",
         category: "Women's T-Shirts",
     },
     {
         id: "t4",
         name: "Striped Cotton Tee",
-        price: 34.99,
-        originalPrice: 44.99,
+        price: 1799,
+        originalPrice: 2499,
         image: "https://images.unsplash.com/photo-1523381294911-8d3cead13475?w=800&auto=format&fit=crop&q=80",
         category: "Men's T-Shirts",
         isSale: true,
@@ -30,8 +30,8 @@ const featuredProducts = [
     {
         id: "t6",
         name: "Oversized Crew Neck",
-        price: 32.99,
-        originalPrice: 39.99,
+        price: 1699,
+        originalPrice: 2199,
         image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80",
         category: "Women's T-Shirts",
         isSale: true,

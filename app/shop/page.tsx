@@ -8,7 +8,7 @@ const products = [
     {
         id: "t1",
         name: "Classic White T-Shirt",
-        price: 24.99,
+        price: 1299,
         image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&auto=format&fit=crop&q=80",
         category: "Men's T-Shirts",
         color: "White",
@@ -17,7 +17,7 @@ const products = [
     {
         id: "t2",
         name: "Vintage Black Tee",
-        price: 29.99,
+        price: 1599,
         image: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800&auto=format&fit=crop&q=80",
         category: "Men's T-Shirts",
         color: "Black",
@@ -25,7 +25,7 @@ const products = [
     {
         id: "t3",
         name: "Navy Blue Essential",
-        price: 22.99,
+        price: 1199,
         image: "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=800&auto=format&fit=crop&q=80",
         category: "Men's T-Shirts",
         color: "Navy Blue",
@@ -33,8 +33,8 @@ const products = [
     {
         id: "t4",
         name: "Striped Cotton Tee",
-        price: 34.99,
-        originalPrice: 44.99,
+        price: 1799,
+        originalPrice: 2499,
         image: "https://images.unsplash.com/photo-1523381294911-8d3cead13475?w=800&auto=format&fit=crop&q=80",
         category: "Men's T-Shirts",
         color: "Striped",
@@ -44,7 +44,7 @@ const products = [
     {
         id: "t5",
         name: "Graphic Print T-Shirt",
-        price: 27.99,
+        price: 1499,
         image: "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=800&auto=format&fit=crop&q=80",
         category: "Women's T-Shirts",
         color: "White/Print",
@@ -52,8 +52,8 @@ const products = [
     {
         id: "t6",
         name: "Oversized Crew Neck",
-        price: 32.99,
-        originalPrice: 39.99,
+        price: 1699,
+        originalPrice: 2199,
         image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80",
         category: "Women's T-Shirts",
         color: "Light Grey",
@@ -62,7 +62,7 @@ const products = [
     {
         id: "t7",
         name: "V-Neck Basic Tee",
-        price: 19.99,
+        price: 999,
         image: "https://images.unsplash.com/photo-1554568218-0f1715e72254?w=800&auto=format&fit=crop&q=80",
         category: "Women's T-Shirts",
         color: "Beige",
@@ -71,7 +71,7 @@ const products = [
     {
         id: "t8",
         name: "Premium Cotton Tee",
-        price: 29.99,
+        price: 1599,
         image: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80",
         category: "Men's T-Shirts",
         color: "White",
@@ -80,8 +80,8 @@ const products = [
     {
         id: "t9",
         name: "Long Sleeve Tee",
-        price: 39.99,
-        originalPrice: 49.99,
+        price: 1999,
+        originalPrice: 2599,
         image: "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=800&auto=format&fit=crop&q=80",
         category: "Men's T-Shirts",
         color: "Grey",
@@ -90,7 +90,7 @@ const products = [
     {
         id: "t10",
         name: "Relaxed Fit T-Shirt",
-        price: 24.99,
+        price: 1299,
         image: "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=800&auto=format&fit=crop&q=80",
         category: "Women's T-Shirts",
         color: "Pastel Blue",
@@ -98,7 +98,7 @@ const products = [
     {
         id: "t11",
         name: "Round Neck Basic",
-        price: 22.99,
+        price: 1199,
         image: "https://images.unsplash.com/photo-1613852348255-d416de68ae33?w=800&auto=format&fit=crop&q=80",
         category: "Men's T-Shirts",
         color: "Burgundy",
@@ -106,7 +106,7 @@ const products = [
     {
         id: "t12",
         name: "Sport Performance Tee",
-        price: 34.99,
+        price: 1899,
         image: "https://images.unsplash.com/photo-1593358577103-9586b08ad8b2?w=800&auto=format&fit=crop&q=80",
         category: "Men's T-Shirts",
         color: "Athletic Grey",
