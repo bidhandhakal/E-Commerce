@@ -59,7 +59,7 @@ export default function RootLayout({
           <ConvexClientProvider>
             <ClientProviders>
               <LoadingScreen />
-              <div className="flex min-h-screen flex-col bg-background">
+              <div id="content-wrapper" className="flex min-h-screen flex-col bg-background">
                 <Navbar />
                 <main className="flex-1">{children}</main>
                 <Footer />
