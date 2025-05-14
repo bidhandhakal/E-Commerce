@@ -1,7 +1,65 @@
+"use client";
+
+import { useState, FormEvent } from "react";
 import Image from "next/image";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import { useAuth as useClerkAuth } from "@clerk/nextjs";
 
 export default function ContactPage() {
+    const { requireAuth } = useAuth();
+    const { isSignedIn } = useClerkAuth();
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        subject: "",
+        message: ""
+    });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitSuccess, setSubmitSuccess] = useState(false);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { id, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [id]: value
+        }));
+    };
+
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault();
+
+        // Check if user is authenticated
+        const isAuthorized = await requireAuth("You need to sign in to send us a message.");
+
+        if (isAuthorized) {
+            setIsSubmitting(true);
+
+            try {
+                // Here you would normally send the data to your backend
+                // For now, we'll just simulate a successful submission
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                setSubmitSuccess(true);
+                setFormData({
+                    name: "",
+                    email: "",
+                    subject: "",
+                    message: ""
+                });
+
+                // Reset success message after 5 seconds
+                setTimeout(() => {
+                    setSubmitSuccess(false);
+                }, 5000);
+            } catch (error) {
+                console.error("Error submitting form:", error);
+            } finally {
+                setIsSubmitting(false);
+            }
+        }
+    };
+
     return (
         <>
             {/* Hero section */}
@@ -67,7 +125,13 @@ export default function ContactPage() {
                         <div className="bg-card rounded-lg p-8 border border-border shadow-sm">
                             <h2 className="text-2xl font-semibold mb-6">Get in Touch</h2>
 
-                            <form className="space-y-6">
+                            {submitSuccess ? (
+                                <div className="bg-green-100 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-md p-4 mb-6">
+                                    <p className="text-green-800 dark:text-green-300 font-medium">Thank you for your message! We'll get back to you soon.</p>
+                                </div>
+                            ) : null}
+
+                            <form className="space-y-6" onSubmit={handleSubmit}>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                     <div>
                                         <label htmlFor="name" className="block text-sm font-medium mb-2">
@@ -76,6 +140,8 @@ export default function ContactPage() {
                                         <input
                                             type="text"
                                             id="name"
+                                            value={formData.name}
+                                            onChange={handleChange}
                                             className="w-full px-4 py-2 border border-border rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary/50"
                                             required
                                         />
@@ -88,6 +154,8 @@ export default function ContactPage() {
                                         <input
                                             type="email"
                                             id="email"
+                                            value={formData.email}
+                                            onChange={handleChange}
                                             className="w-full px-4 py-2 border border-border rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary/50"
                                             required
                                         />
@@ -101,6 +169,8 @@ export default function ContactPage() {
                                     <input
                                         type="text"
                                         id="subject"
+                                        value={formData.subject}
+                                        onChange={handleChange}
                                         className="w-full px-4 py-2 border border-border rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary/50"
                                     />
                                 </div>
@@ -112,6 +182,8 @@ export default function ContactPage() {
                                     <textarea
                                         id="message"
                                         rows={5}
+                                        value={formData.message}
+                                        onChange={handleChange}
                                         className="w-full px-4 py-2 border border-border rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
                                         required
                                     ></textarea>
@@ -119,10 +191,21 @@ export default function ContactPage() {
 
                                 <button
                                     type="submit"
-                                    className="flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-medium rounded-md hover:bg-primary/90 transition-colors"
+                                    disabled={isSubmitting}
+                                    className={`flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-medium rounded-md hover:bg-primary/90 transition-colors ${isSubmitting ? "opacity-70 cursor-not-allowed" : ""
+                                        }`}
                                 >
-                                    <Send size={16} />
-                                    Send Message
+                                    {isSubmitting ? (
+                                        <>
+                                            <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                            Sending...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Send size={16} />
+                                            Send Message
+                                        </>
+                                    )}
                                 </button>
                             </form>
                         </div>
