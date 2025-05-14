@@ -18,7 +18,7 @@ export default function Footer() {
                             className="h-6 w-auto"
                         />
                         <span className="font-bold text-foreground">
-                            Cookware
+                            Luxera
                         </span>
                     </div>
 
@@ -46,7 +46,7 @@ export default function Footer() {
 
                     {/* Copyright */}
                     <div className="text-sm text-muted-foreground">
-                        <p>© {currentYear} Cookware</p>
+                        <p>© {currentYear} Luxera</p>
                     </div>
                 </div>
             </div>

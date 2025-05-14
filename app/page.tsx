@@ -10,7 +10,7 @@ export default function Home() {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
-            src="/shirt.jfif"
+            src="/shirt.jpg"
             alt="T-shirt collection background"
             fill
             priority

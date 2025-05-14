@@ -113,7 +113,7 @@ export default function LoadingScreen() {
                                 transition={{ duration: 0.5, delay: 0.2 }}
                                 style={{ color: isDark ? '#141015' : 'white' }}
                             >
-                                Cookware
+                                Luxera
                             </motion.h1>
 
                             {/* Progress bar */}

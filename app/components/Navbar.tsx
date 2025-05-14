@@ -111,7 +111,7 @@ export default function Navbar() {
                                 </div>
                             )}
                             <span className="brand-title text-foreground">
-                                Cookware
+                                Luxera
                             </span>
                         </Link>
                     </div>
