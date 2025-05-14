@@ -5,10 +5,9 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import LoadingScreen from "./components/LoadingScreen";
-import { CartProvider } from "./context/CartContext";
-import { AuthProvider } from "./context/AuthContext";
-import { ThemeProvider } from "next-themes";
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClientProviders } from "./providers/ClientProviders";
+import { ClerkClientProvider } from "./providers/ClerkClientProvider";
+import { ConvexClientProvider } from "./providers/ConvexClientProvider";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -36,20 +35,18 @@ export default function RootLayout({
       <body
         className={`${geistMono.variable} ${montserrat.variable} antialiased min-h-screen flex flex-col`}
       >
-        <ClerkProvider>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-            <AuthProvider>
-              <CartProvider>
-                <LoadingScreen />
-                <div className="flex min-h-screen flex-col">
-                  <Navbar />
-                  <main className="flex-1">{children}</main>
-                  <Footer />
-                </div>
-              </CartProvider>
-            </AuthProvider>
-          </ThemeProvider>
-        </ClerkProvider>
+        <ClerkClientProvider>
+          <ConvexClientProvider>
+            <ClientProviders>
+              <LoadingScreen />
+              <div className="flex min-h-screen flex-col">
+                <Navbar />
+                <main className="flex-1">{children}</main>
+                <Footer />
+              </div>
+            </ClientProviders>
+          </ConvexClientProvider>
+        </ClerkClientProvider>
       </body>
     </html>
   );
