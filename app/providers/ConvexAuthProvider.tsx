@@ -6,7 +6,7 @@ import { useConvexAuth } from "../hooks/useConvexAuth";
 // Define type for Clerk user to ensure it has an id property
 type ClerkUserType = {
     id: string;
-    [key: string]: any;
+    [key: string]: unknown;
 };
 
 // Define the type for our context
@@ -44,7 +44,7 @@ export function ConvexAuthProvider({ children }: { children: ReactNode }) {
         isLoaded: auth.isLoaded,
         isAuthenticated: !!auth.isAuthenticated, // Convert to boolean with !!
         user: auth.user,
-        clerkUser: auth.clerkUser ? auth.clerkUser as ClerkUserType : null
+        clerkUser: auth.clerkUser ? (auth.clerkUser as unknown as ClerkUserType) : null
     };
 
     return (

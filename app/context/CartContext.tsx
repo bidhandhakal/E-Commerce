@@ -6,12 +6,11 @@ import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 import { useAuth as useClerkAuth } from "@clerk/nextjs";
 import { useConvexAuthContext } from "../providers/ConvexAuthProvider";
-import { User } from "@clerk/nextjs/server";
 
 // Define a type for Clerk user to ensure it has an id property
 type ClerkUserType = {
     id: string;
-    [key: string]: any;
+    [key: string]: unknown;
 };
 
 export interface CartItem {
@@ -89,7 +88,7 @@ function convertConvexItemsToLocal(items: ConvexCartItem[] | undefined): CartIte
 export function CartProvider({ children }: CartProviderProps) {
     const { isSignedIn } = useClerkAuth();
     const { clerkUser, isLoaded: isAuthLoaded } = useConvexAuthContext();
-    const typedClerkUser = clerkUser as ClerkUserType | null;
+    const typedClerkUser = clerkUser as unknown as ClerkUserType | null;
     const [localCartItems, setLocalCartItems] = useState<CartItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [hasSyncedCart, setHasSyncedCart] = useState(false);
