@@ -128,7 +128,7 @@ export default function Home() {
                 ))}
               </div>
               <p className="text-muted-foreground mb-4">
-                "These are the most comfortable t-shirts I've ever worn. The quality is outstanding and they fit perfectly. Will definitely buy more!"
+                &quot;These are the most comfortable t-shirts I&apos;ve ever worn. The quality is outstanding and they fit perfectly. Will definitely buy more!&quot;
               </p>
               <p className="font-semibold">- Emily J.</p>
             </div>
@@ -140,7 +140,7 @@ export default function Home() {
                 ))}
               </div>
               <p className="text-muted-foreground mb-4">
-                "I love the designs and the fabric is so soft. These t-shirts are now my go-to for both casual wear and layering. Great value for money."
+                &quot;I love the designs and the fabric is so soft. These t-shirts are now my go-to for both casual wear and layering. Great value for money.&quot;
               </p>
               <p className="font-semibold">- Marcus T.</p>
             </div>
@@ -152,7 +152,7 @@ export default function Home() {
                 ))}
               </div>
               <p className="text-muted-foreground mb-4">
-                "The quality of these shirts is exceptional. They wash well and keep their shape. The delivery was also super fast. Highly recommend!"
+                &quot;The quality of these shirts is exceptional. They wash well and keep their shape. The delivery was also super fast. Highly recommend!&quot;
               </p>
               <p className="font-semibold">- Sarah K.</p>
             </div>

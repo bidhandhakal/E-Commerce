@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useState, useContext, ReactNode, useEffect } from "react";
-import { useAuth as useClerkAuth, useUser } from "@clerk/nextjs";
+import { useAuth as useClerkAuth } from "@clerk/nextjs";
 import AuthRequiredModal from "../components/AuthRequiredModal";
 
 interface AuthContextType {
@@ -26,7 +26,6 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps) {
     const { isSignedIn, isLoaded } = useClerkAuth();
-    const { user } = useUser();
 
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
     const [authModalMessage, setAuthModalMessage] = useState<string>();

@@ -4,11 +4,9 @@ import { useState, FormEvent } from "react";
 import Image from "next/image";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import { useAuth as useClerkAuth } from "@clerk/nextjs";
 
 export default function ContactPage() {
     const { requireAuth } = useAuth();
-    const { isSignedIn } = useClerkAuth();
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -37,7 +35,7 @@ export default function ContactPage() {
 
             try {
                 // Here you would normally send the data to your backend
-                // For now, we'll just simulate a successful submission
+                // For now, we&apos;ll just simulate a successful submission
                 await new Promise(resolve => setTimeout(resolve, 1000));
 
                 setSubmitSuccess(true);
