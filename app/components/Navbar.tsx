@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X, ShoppingCart, ShoppingBag, LogIn, LogOut, User } from "lucide-react";
+import { Menu, X, ShoppingCart, ShoppingBag, LogIn } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
-import { useAuth as useClerkAuth, SignOutButton, useClerk, UserButton } from "@clerk/nextjs";
+import { useAuth as useClerkAuth, useClerk, UserButton } from "@clerk/nextjs";
 
 const navLinks = [
     { name: "Home", href: "/" },
@@ -29,8 +29,6 @@ export default function Navbar() {
     const { isSignedIn } = useClerkAuth();
     const router = useRouter();
     const cartItemsCount = getCartCount();
-    const [showSignIn, setShowSignIn] = useState(false);
-    const redirectRef = useRef(null);
     const clerk = useClerk();
 
     // Handle scroll events
@@ -71,11 +69,6 @@ export default function Navbar() {
         } else {
             router.push("/cart");
         }
-    };
-
-    const handleSignOut = () => {
-        // This function is no longer needed as we'll use Clerk's SignOutButton
-        // but keep it to avoid breaking changes
     };
 
     const handleSignInClick = async (e: React.MouseEvent) => {

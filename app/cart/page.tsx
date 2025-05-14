@@ -42,7 +42,7 @@ export default function CartPage() {
 
         setIsCheckingOut(true);
 
-        // Simulate processing (in a real app, you'd redirect to checkout)
+        // Simulate processing (in a real app, you&apos;d redirect to checkout)
         setTimeout(() => {
             alert("Checkout functionality would go here in a real app!");
             setIsCheckingOut(false);
@@ -70,7 +70,7 @@ export default function CartPage() {
                         <AlertCircle className="h-10 w-10 text-muted-foreground" />
                     </div>
                     <h2 className="text-xl font-medium mb-2">Your cart is empty</h2>
-                    <p className="text-muted-foreground mb-6">Looks like you haven't added anything to your cart yet.</p>
+                    <p className="text-muted-foreground mb-6">Looks like you haven&apos;t added anything to your cart yet.</p>
                     <Link
                         href="/shop"
                         className="inline-flex items-center justify-center px-6 py-3 bg-primary text-primary-foreground rounded-md font-medium transition-colors hover:bg-primary/90"

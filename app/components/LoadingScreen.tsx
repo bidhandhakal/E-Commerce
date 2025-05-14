@@ -8,7 +8,6 @@ import Image from "next/image";
 const FIXED_LOADING_TIME = 4000;
 
 export default function LoadingScreen() {
-    const [isLoading, setIsLoading] = useState(true);
     const [progress, setProgress] = useState(0);
     const [isVisible, setIsVisible] = useState(true);
     const [isDark, setIsDark] = useState(false);
@@ -52,7 +51,6 @@ export default function LoadingScreen() {
 
                 // Animate out after loading completes
                 setTimeout(() => {
-                    setIsLoading(false);
                     setTimeout(() => {
                         setAnimationComplete(true);
                         // Wait for animation to complete before unmounting

@@ -23,10 +23,6 @@ export default function ProductCard({ product }: ProductCardProps) {
     const slug = product.slug || product.id;
     const productUrl = `/products/${slug}`;
 
-    const discount = product.originalPrice
-        ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
-        : 0;
-
     return (
         <div className="group relative overflow-hidden rounded-lg border border-border bg-card transition-all hover:shadow-md">
             {/* Product image */}

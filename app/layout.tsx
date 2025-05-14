@@ -21,7 +21,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Pyuto | Premium T-Shirts Collection",
+  title: "Cookware | Premium T-Shirts Collection",
   description: "Discover our premium collection of t-shirts at Pyuto. High-quality fabrics, trendy designs, and exceptional comfort.",
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: 'oklch(0.141 0.005 285.823)' },
