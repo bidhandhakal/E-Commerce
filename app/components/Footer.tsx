@@ -11,7 +11,7 @@ export default function Footer() {
                     {/* Brand */}
                     <div className="flex items-center gap-2">
                         <Image
-                            src="https://cdn-icons-png.flaticon.com/512/8576/8576248.png"
+                            src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/phalcon/phalcon-plain.svg"
                             alt="Pyuto Logo"
                             width={24}
                             height={24}

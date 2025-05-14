@@ -97,7 +97,7 @@ export default function LoadingScreen() {
                                 transition={{ duration: 0.5 }}
                             >
                                 <Image
-                                    src="https://cdn-icons-png.flaticon.com/512/8576/8576248.png"
+                                    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/phalcon/phalcon-plain.svg"
                                     alt="Loading icon"
                                     width={192}
                                     height={192}

@@ -17,7 +17,7 @@ const navLinks = [
 ];
 
 // Logo URL from a clothing brand placeholder
-const LOGO_URL = "https://cdn-icons-png.flaticon.com/512/8576/8576248.png";
+const LOGO_URL = "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/phalcon/phalcon-plain.svg";
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
