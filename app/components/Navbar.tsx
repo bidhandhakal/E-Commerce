@@ -1,0 +1,153 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { Menu, X, ShoppingCart, ShoppingBag } from "lucide-react";
+import ThemeToggle from "./ThemeToggle";
+import { useCart } from "../context/CartContext";
+
+const navLinks = [
+    { name: "Home", href: "/" },
+    { name: "Shop", href: "/shop" },
+    { name: "Contact", href: "/contact" },
+];
+
+// Logo URL from a clothing brand placeholder
+const LOGO_URL = "https://cdn-icons-png.flaticon.com/512/8576/8576248.png";
+
+export default function Navbar() {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [prevScrollPos, setPrevScrollPos] = useState(0);
+    const [visible, setVisible] = useState(true);
+    const [imageError, setImageError] = useState(false);
+    const { getCartCount } = useCart();
+    const cartItemsCount = getCartCount();
+
+    // Handle scroll events
+    useEffect(() => {
+        const handleScroll = () => {
+            const currentScrollPos = window.scrollY;
+            const scrollingDown = prevScrollPos < currentScrollPos;
+            const scrollDelta = Math.abs(prevScrollPos - currentScrollPos);
+
+            // Only hide/show navbar if scrolling more than 10px and not at top of page
+            if (scrollDelta > 10) {
+                // Always show navbar when at the top of the page
+                if (currentScrollPos <= 20) {
+                    setVisible(true);
+                } else {
+                    setVisible(!scrollingDown);
+                }
+                setPrevScrollPos(currentScrollPos);
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [prevScrollPos]);
+
+    const toggleMenu = () => {
+        setIsMenuOpen(!isMenuOpen);
+    };
+
+    // Define transition classes
+    const navbarClasses = `sticky z-50 w-full bg-background/80 backdrop-blur-md border-b border-border transition-transform duration-300 ${visible ? "top-0 translate-y-0" : "-translate-y-full"
+        }`;
+
+    return (
+        <nav className={navbarClasses}>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex items-center justify-between h-20">
+                    {/* Logo and brand */}
+                    <div className="flex-shrink-0 flex items-center">
+                        <Link href="/" className="flex items-center gap-2">
+                            {!imageError ? (
+                                <Image
+                                    src={LOGO_URL}
+                                    alt="Pyuto Logo"
+                                    width={40}
+                                    height={40}
+                                    className="mr-1"
+                                    onError={() => setImageError(true)}
+                                />
+                            ) : (
+                                <div className="w-10 h-10 flex items-center justify-center bg-primary/10 rounded-full text-primary mr-1">
+                                    <ShoppingBag size={20} />
+                                </div>
+                            )}
+                            <span className="brand-title text-foreground">
+                                Pyuto
+                            </span>
+                        </Link>
+                    </div>
+
+                    {/* Desktop Nav Links */}
+                    <div className="hidden md:block">
+                        <div className="ml-10 flex items-center space-x-8">
+                            {navLinks.map((link) => (
+                                <Link
+                                    key={link.name}
+                                    href={link.href}
+                                    className="nav-link px-3 py-1 rounded-md text-foreground hover:bg-primary/10 hover:text-primary transition-colors"
+                                >
+                                    {link.name}
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Theme Toggle, Cart, and Mobile Menu Button */}
+                    <div className="flex items-center gap-3">
+                        <ThemeToggle />
+
+                        {/* Cart Button */}
+                        <Link
+                            href="/cart"
+                            className="relative p-2 rounded-md hover:bg-secondary transition-colors"
+                            aria-label="View shopping cart"
+                        >
+                            <ShoppingCart size={24} className="text-foreground" />
+                            {cartItemsCount > 0 && (
+                                <span className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-bold">
+                                    {cartItemsCount}
+                                </span>
+                            )}
+                        </Link>
+
+                        {/* Mobile menu button */}
+                        <button
+                            type="button"
+                            className="md:hidden bg-secondary p-2 rounded-md text-secondary-foreground hover:bg-secondary/80"
+                            onClick={toggleMenu}
+                            aria-controls="mobile-menu"
+                            aria-expanded={isMenuOpen}
+                        >
+                            <span className="sr-only">Open main menu</span>
+                            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Mobile Menu */}
+            <div
+                className={`md:hidden ${isMenuOpen ? "block" : "hidden"}`}
+                id="mobile-menu"
+            >
+                <div className="px-4 pt-3 pb-4 space-y-2 sm:px-4 bg-background border-b border-border">
+                    {navLinks.map((link) => (
+                        <Link
+                            key={link.name}
+                            href={link.href}
+                            className="block px-4 py-3 rounded-md text-base font-medium text-foreground hover:bg-primary/10 hover:text-primary transition-colors"
+                            onClick={() => setIsMenuOpen(false)}
+                        >
+                            {link.name}
+                        </Link>
+                    ))}
+                </div>
+            </div>
+        </nav>
+    );
+} 
