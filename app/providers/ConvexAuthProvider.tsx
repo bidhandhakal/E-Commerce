@@ -3,12 +3,18 @@
 import { createContext, useContext, ReactNode } from "react";
 import { useConvexAuth } from "../hooks/useConvexAuth";
 
+// Define type for Clerk user to ensure it has an id property
+type ClerkUserType = {
+    id: string;
+    [key: string]: any;
+};
+
 // Define the type for our context
 interface ConvexAuthContextType {
     isLoaded: boolean;
     isAuthenticated: boolean;
     user: unknown; // Convex user data
-    clerkUser: unknown; // Clerk user object
+    clerkUser: ClerkUserType | null; // Clerk user object with at least an id property
 }
 
 // Create the context with a default value
@@ -38,7 +44,7 @@ export function ConvexAuthProvider({ children }: { children: ReactNode }) {
         isLoaded: auth.isLoaded,
         isAuthenticated: !!auth.isAuthenticated, // Convert to boolean with !!
         user: auth.user,
-        clerkUser: auth.clerkUser
+        clerkUser: auth.clerkUser ? auth.clerkUser as ClerkUserType : null
     };
 
     return (

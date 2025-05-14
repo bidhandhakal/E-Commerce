@@ -6,6 +6,13 @@ import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 import { useAuth as useClerkAuth } from "@clerk/nextjs";
 import { useConvexAuthContext } from "../providers/ConvexAuthProvider";
+import { User } from "@clerk/nextjs/server";
+
+// Define a type for Clerk user to ensure it has an id property
+type ClerkUserType = {
+    id: string;
+    [key: string]: any;
+};
 
 export interface CartItem {
     id: string;
@@ -82,6 +89,7 @@ function convertConvexItemsToLocal(items: ConvexCartItem[] | undefined): CartIte
 export function CartProvider({ children }: CartProviderProps) {
     const { isSignedIn } = useClerkAuth();
     const { clerkUser, isLoaded: isAuthLoaded } = useConvexAuthContext();
+    const typedClerkUser = clerkUser as ClerkUserType | null;
     const [localCartItems, setLocalCartItems] = useState<CartItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [hasSyncedCart, setHasSyncedCart] = useState(false);
@@ -95,7 +103,7 @@ export function CartProvider({ children }: CartProviderProps) {
     // Fetch cart items from Convex if user is signed in
     const convexCartItems = useQuery(
         api.cart.getCartItems,
-        isSignedIn && clerkUser?.id ? { clerkId: clerkUser.id } : "skip"
+        isSignedIn && typedClerkUser?.id ? { clerkId: typedClerkUser.id } : "skip"
     );
 
     // Load cart from localStorage when the component mounts
@@ -139,14 +147,14 @@ export function CartProvider({ children }: CartProviderProps) {
             // 3. We have access to the database
             // 4. We haven't already synced the cart in this session
             // 5. We have items in the local cart
-            if (isSignedIn && clerkUser?.id && convexCartItems !== undefined && !hasSyncedCart && localCartItems.length > 0) {
+            if (isSignedIn && typedClerkUser?.id && convexCartItems !== undefined && !hasSyncedCart && localCartItems.length > 0) {
                 try {
                     setIsLoading(true);
 
                     // Add each local cart item to the database
                     for (const item of localCartItems) {
                         await addToCartMutation({
-                            clerkId: clerkUser.id,
+                            clerkId: typedClerkUser.id,
                             productId: item.id,
                             name: item.name,
                             price: item.price,
@@ -168,7 +176,7 @@ export function CartProvider({ children }: CartProviderProps) {
                 } finally {
                     setIsLoading(false);
                 }
-            } else if (isSignedIn && clerkUser?.id && convexCartItems !== undefined && !hasSyncedCart) {
+            } else if (isSignedIn && typedClerkUser?.id && convexCartItems !== undefined && !hasSyncedCart) {
                 // If there are no items to sync, just mark as synced
                 setHasSyncedCart(true);
                 setIsLoading(false);
@@ -178,7 +186,7 @@ export function CartProvider({ children }: CartProviderProps) {
         if (isAuthLoaded) {
             syncLocalCartToDatabase();
         }
-    }, [isSignedIn, clerkUser, convexCartItems, hasSyncedCart, localCartItems, addToCartMutation, isAuthLoaded]);
+    }, [isSignedIn, typedClerkUser, convexCartItems, hasSyncedCart, localCartItems, addToCartMutation, isAuthLoaded]);
 
     // Combine local and Convex cart items based on authentication state
     const cartItems = isSignedIn && convexCartItems
@@ -187,11 +195,11 @@ export function CartProvider({ children }: CartProviderProps) {
 
     // Add item to cart (different implementation based on auth state)
     const addToCart = async (item: Omit<CartItem, "quantity">, quantity = 1) => {
-        if (isSignedIn && clerkUser?.id) {
+        if (isSignedIn && typedClerkUser?.id) {
             // Add to Convex database
             try {
                 await addToCartMutation({
-                    clerkId: clerkUser.id,
+                    clerkId: typedClerkUser.id,
                     productId: item.id,
                     name: item.name,
                     price: item.price,
@@ -223,11 +231,11 @@ export function CartProvider({ children }: CartProviderProps) {
 
     // Remove item from cart
     const removeFromCart = async (id: string) => {
-        if (isSignedIn && clerkUser?.id) {
+        if (isSignedIn && typedClerkUser?.id) {
             // Remove from Convex
             try {
                 await removeCartItemMutation({
-                    clerkId: clerkUser.id,
+                    clerkId: typedClerkUser.id,
                     cartItemId: id as Id<"cartItems">,
                 });
             } catch (error) {
@@ -243,11 +251,11 @@ export function CartProvider({ children }: CartProviderProps) {
     const updateQuantity = async (id: string, quantity: number) => {
         if (quantity < 1) return;
 
-        if (isSignedIn && clerkUser?.id) {
+        if (isSignedIn && typedClerkUser?.id) {
             // Update in Convex
             try {
                 await updateQuantityMutation({
-                    clerkId: clerkUser.id,
+                    clerkId: typedClerkUser.id,
                     cartItemId: id as Id<"cartItems">,
                     quantity,
                 });
@@ -266,11 +274,11 @@ export function CartProvider({ children }: CartProviderProps) {
 
     // Clear cart
     const clearCart = async () => {
-        if (isSignedIn && clerkUser?.id) {
+        if (isSignedIn && typedClerkUser?.id) {
             // Clear in Convex
             try {
                 await clearCartMutation({
-                    clerkId: clerkUser.id,
+                    clerkId: typedClerkUser.id,
                 });
             } catch (error) {
                 console.error("Failed to clear cart:", error);
