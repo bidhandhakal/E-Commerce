@@ -79,7 +79,13 @@ export default function Navbar() {
     const handleSignInClick = async (e: React.MouseEvent) => {
         e.preventDefault();
         try {
-            await clerk.openSignIn();
+            // Get the sign-in URL from Clerk
+            const signInUrl = clerk.buildSignInUrl({
+                redirectUrl: window.location.href
+            });
+
+            // Direct browser redirect
+            window.location.href = signInUrl;
         } catch (error) {
             console.error("Error redirecting to sign in:", error);
         }
@@ -88,7 +94,13 @@ export default function Navbar() {
     const handleSignUpClick = async (e: React.MouseEvent) => {
         e.preventDefault();
         try {
-            await clerk.openSignUp();
+            // Get the sign-up URL from Clerk
+            const signUpUrl = clerk.buildSignUpUrl({
+                redirectUrl: window.location.href
+            });
+
+            // Direct browser redirect
+            window.location.href = signUpUrl;
         } catch (error) {
             console.error("Error redirecting to sign up:", error);
         }

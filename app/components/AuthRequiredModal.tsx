@@ -2,6 +2,7 @@
 
 import { X } from "lucide-react";
 import { useClerk } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 interface AuthRequiredModalProps {
     isOpen: boolean;
@@ -15,16 +16,25 @@ export default function AuthRequiredModal({
     message = "You need to sign in to access this feature.",
 }: AuthRequiredModalProps) {
     const clerk = useClerk();
+    const router = useRouter();
 
     if (!isOpen) return null;
 
     const handleSignIn = async () => {
         try {
-            await clerk.openSignIn();
+            // Redirect to Clerk's hosted sign-in page
+            onClose();
+
+            // Get the sign-in URL from Clerk
+            const signInUrl = clerk.buildSignInUrl({
+                redirectUrl: window.location.href
+            });
+
+            // Direct browser redirect
+            window.location.href = signInUrl;
         } catch (error) {
             console.error("Error redirecting to sign in:", error);
         }
-        onClose();
     };
 
     return (

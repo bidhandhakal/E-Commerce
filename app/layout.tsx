@@ -8,6 +8,7 @@ import LoadingScreen from "./components/LoadingScreen";
 import { ClientProviders } from "./providers/ClientProviders";
 import { ClerkClientProvider } from "./providers/ClerkClientProvider";
 import { ConvexClientProvider } from "./providers/ConvexClientProvider";
+import ClerkPreload from "./components/ClerkPreload";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -62,6 +63,7 @@ export default function RootLayout({
           <ConvexClientProvider>
             <ClientProviders>
               <LoadingScreen />
+              <ClerkPreload />
               <div id="content-wrapper" className="flex min-h-screen flex-col bg-background">
                 <Navbar />
                 <main className="flex-1">{children}</main>
