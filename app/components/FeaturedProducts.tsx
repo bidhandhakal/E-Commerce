@@ -1,44 +1,20 @@
+"use client";
+
 import Link from "next/link";
 import ProductCard from "./ProductCard";
-
-// Sample t-shirt product data
-const featuredProducts = [
-    {
-        id: "t1",
-        name: "Classic White T-Shirt",
-        price: 1299,
-        image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&auto=format&fit=crop&q=80",
-        category: "Men's T-Shirts",
-        isNew: true,
-    },
-    {
-        id: "t5",
-        name: "Graphic Print T-Shirt",
-        price: 1499,
-        image: "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=800&auto=format&fit=crop&q=80",
-        category: "Women's T-Shirts",
-    },
-    {
-        id: "t4",
-        name: "Striped Cotton Tee",
-        price: 1799,
-        originalPrice: 2499,
-        image: "https://images.unsplash.com/photo-1523381294911-8d3cead13475?w=800&auto=format&fit=crop&q=80",
-        category: "Men's T-Shirts",
-        isSale: true,
-    },
-    {
-        id: "t6",
-        name: "Oversized Crew Neck",
-        price: 1699,
-        originalPrice: 2199,
-        image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80",
-        category: "Women's T-Shirts",
-        isSale: true,
-    },
-];
+import { useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
 
 export default function FeaturedProducts() {
+    // Fetch featured products - get 4 active products
+    const productsResult = useQuery(api.products.listProducts, {
+        skipInactive: true,
+        limit: 4
+    });
+
+    // Safely handle the products result
+    const products = productsResult || [];
+
     return (
         <section className="py-20 bg-background">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -52,9 +28,29 @@ export default function FeaturedProducts() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-                    {featuredProducts.map((product) => (
-                        <ProductCard key={product.id} product={product} />
-                    ))}
+                    {products.length > 0 ? (
+                        products.map((product) => (
+                            <ProductCard
+                                key={product._id.toString()}
+                                product={{
+                                    id: product._id.toString(),
+                                    name: product.name,
+                                    price: product.price,
+                                    originalPrice: product.originalPrice,
+                                    image: product.image,
+                                    category: product.category
+                                }}
+                            />
+                        ))
+                    ) : (
+                        // Placeholder cards when no products are available
+                        Array(4).fill(0).map((_, index) => (
+                            <div
+                                key={index}
+                                className="bg-secondary h-96 rounded-lg animate-pulse"
+                            />
+                        ))
+                    )}
                 </div>
 
                 <div className="mt-12 text-center">

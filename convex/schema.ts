@@ -12,6 +12,8 @@ export default defineSchema({
         name: v.optional(v.string()),
         // Profile image URL 
         imageUrl: v.optional(v.string()),
+        // Admin status
+        isAdmin: v.optional(v.boolean()),
         // User preferences or any additional user data
         preferences: v.optional(v.object({
             theme: v.optional(v.string()),
@@ -47,6 +49,33 @@ export default defineSchema({
     })
         .index("by_user", ["userId"])
         .index("by_user_and_product", ["userId", "productId"]),
+
+    // Table to store products
+    products: defineTable({
+        // Product details
+        name: v.string(),
+        description: v.optional(v.string()),
+        price: v.number(),
+        originalPrice: v.optional(v.number()),
+        image: v.string(),
+        category: v.string(),
+        // Product variations
+        sizes: v.optional(v.array(v.string())),
+        colors: v.optional(v.array(v.string())),
+        // Flags
+        isNew: v.optional(v.boolean()),
+        isSale: v.optional(v.boolean()),
+        isActive: v.optional(v.boolean()),
+        // Inventory
+        stock: v.optional(v.number()),
+        // Timestamps
+        createdAt: v.number(),
+        updatedAt: v.number(),
+        // Created by admin
+        createdBy: v.id("users"),
+    })
+        .index("by_category", ["category"])
+        .index("by_creation", ["createdAt"]),
 
     // You can add more tables as needed here
 }); 

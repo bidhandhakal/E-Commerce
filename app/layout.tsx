@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist_Mono } from "next/font/google";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
@@ -23,6 +23,9 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   title: "Luxera | Premium T-Shirts Collection",
   description: "Discover our premium collection of t-shirts at Pyuto. High-quality fabrics, trendy designs, and exceptional comfort.",
+};
+
+export const viewport: Viewport = {
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: 'oklch(0.141 0.005 285.823)' },
     { media: '(prefers-color-scheme: dark)', color: 'oklch(1 0 0)' },

@@ -1,118 +1,12 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import { Filter } from "lucide-react";
 import ProductCard from "../components/ProductCard";
-
-// Sample product data with focus on t-shirts
-const products = [
-    // Men's T-shirts
-    {
-        id: "t1",
-        name: "Classic White T-Shirt",
-        price: 1299,
-        image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&auto=format&fit=crop&q=80",
-        category: "Men's T-Shirts",
-        color: "White",
-        isNew: true,
-    },
-    {
-        id: "t2",
-        name: "Vintage Black Tee",
-        price: 1599,
-        image: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800&auto=format&fit=crop&q=80",
-        category: "Men's T-Shirts",
-        color: "Black",
-    },
-    {
-        id: "t3",
-        name: "Navy Blue Essential",
-        price: 1199,
-        image: "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=800&auto=format&fit=crop&q=80",
-        category: "Men's T-Shirts",
-        color: "Navy Blue",
-    },
-    {
-        id: "t4",
-        name: "Striped Cotton Tee",
-        price: 1799,
-        originalPrice: 2499,
-        image: "https://images.unsplash.com/photo-1523381294911-8d3cead13475?w=800&auto=format&fit=crop&q=80",
-        category: "Men's T-Shirts",
-        color: "Striped",
-        isSale: true,
-    },
-    // Women's T-shirts
-    {
-        id: "t5",
-        name: "Graphic Print T-Shirt",
-        price: 1499,
-        image: "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=800&auto=format&fit=crop&q=80",
-        category: "Women's T-Shirts",
-        color: "White/Print",
-    },
-    {
-        id: "t6",
-        name: "Oversized Crew Neck",
-        price: 1699,
-        originalPrice: 2199,
-        image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80",
-        category: "Women's T-Shirts",
-        color: "Light Grey",
-        isSale: true,
-    },
-    {
-        id: "t7",
-        name: "V-Neck Basic Tee",
-        price: 999,
-        image: "https://images.unsplash.com/photo-1554568218-0f1715e72254?w=800&auto=format&fit=crop&q=80",
-        category: "Women's T-Shirts",
-        color: "Beige",
-        isNew: true,
-    },
-    {
-        id: "t8",
-        name: "Premium Cotton Tee",
-        price: 1599,
-        image: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80",
-        category: "Men's T-Shirts",
-        color: "White",
-    },
-    // Casual T-shirts
-    {
-        id: "t9",
-        name: "Long Sleeve Tee",
-        price: 1999,
-        originalPrice: 2599,
-        image: "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=800&auto=format&fit=crop&q=80",
-        category: "Men's T-Shirts",
-        color: "Grey",
-        isSale: true,
-    },
-    {
-        id: "t10",
-        name: "Relaxed Fit T-Shirt",
-        price: 1299,
-        image: "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=800&auto=format&fit=crop&q=80",
-        category: "Women's T-Shirts",
-        color: "Pastel Blue",
-    },
-    {
-        id: "t11",
-        name: "Round Neck Basic",
-        price: 1199,
-        image: "https://images.unsplash.com/photo-1613852348255-d416de68ae33?w=800&auto=format&fit=crop&q=80",
-        category: "Men's T-Shirts",
-        color: "Burgundy",
-    },
-    {
-        id: "t12",
-        name: "Sport Performance Tee",
-        price: 1899,
-        image: "https://images.unsplash.com/photo-1593358577103-9586b08ad8b2?w=800&auto=format&fit=crop&q=80",
-        category: "Men's T-Shirts",
-        color: "Athletic Grey",
-        isNew: true,
-    },
-];
+import { useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
+import { Id } from "../../convex/_generated/dataModel";
 
 const categories = [
     "All",
@@ -123,25 +17,55 @@ const categories = [
 ];
 
 export default function ShopPage() {
+    const [selectedCategory, setSelectedCategory] = useState("All");
+    const [sortOption, setSortOption] = useState("newest");
+
+    // Fetch products
+    const productsResult = useQuery(api.products.listProducts, {
+        skipInactive: true
+    });
+
+    // Safely handle products result
+    const products = productsResult || [];
+
+    // Filter products based on selected category
+    const filteredProducts = products.filter(product => {
+        if (selectedCategory === "All") return true;
+        if (selectedCategory === "Sale") return product.isSale === true;
+        if (selectedCategory === "New Arrivals") return product.isNew === true;
+        return product.category === selectedCategory;
+    });
+
+    // Sort products based on selected option
+    const sortedProducts = [...filteredProducts].sort((a, b) => {
+        switch (sortOption) {
+            case "newest":
+                return b.createdAt - a.createdAt;
+            case "price-low":
+                return a.price - b.price;
+            case "price-high":
+                return b.price - a.price;
+            default:
+                return 0;
+        }
+    });
+
+    const handleCategorySelect = (category: string) => {
+        setSelectedCategory(category);
+    };
+
+    const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSortOption(e.target.value);
+    };
+
     return (
         <>
-            {/* Hero banner */}
-            <div className="relative h-64 md:h-80 bg-muted">
-                <Image
-                    src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop"
-                    alt="Shop collection"
-                    fill
-                    className="object-cover object-center brightness-75"
-                />
-                <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-center">
-                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
-                            T-Shirt Collection
-                        </h1>
-                        <p className="text-white/90 max-w-xl mx-auto px-4">
-                            Discover premium quality t-shirts for every style
-                        </p>
-                    </div>
+            <div className="bg-primary text-primary-foreground py-16">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <h1 className="text-4xl sm:text-5xl font-bold mb-6">Our Collection</h1>
+                    <p className="text-lg opacity-90 max-w-2xl mx-auto">
+                        Discover our premium, sustainably made t-shirts designed for comfort and style
+                    </p>
                 </div>
             </div>
 
@@ -154,7 +78,11 @@ export default function ShopPage() {
                             {categories.map((category) => (
                                 <button
                                     key={category}
-                                    className="px-4 py-2 text-sm font-medium rounded-full border border-border hover:bg-secondary transition-colors"
+                                    className={`px-4 py-2 text-sm font-medium rounded-full border transition-colors ${selectedCategory === category
+                                        ? "bg-primary text-primary-foreground border-primary"
+                                        : "border-border hover:bg-secondary"
+                                        }`}
+                                    onClick={() => handleCategorySelect(category)}
                                 >
                                     {category}
                                 </button>
@@ -168,28 +96,49 @@ export default function ShopPage() {
                             <Filter size={16} />
                             <span>Filter</span>
                         </button>
-                        <select className="px-4 py-2 text-sm bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50">
-                            <option>Most Popular</option>
-                            <option>Price: Low to High</option>
-                            <option>Price: High to Low</option>
-                            <option>Newest First</option>
+                        <select
+                            className="px-4 py-2 text-sm bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50"
+                            value={sortOption}
+                            onChange={handleSortChange}
+                        >
+                            <option value="newest">Newest First</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
                         </select>
                     </div>
                 </div>
 
                 {/* Products grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {products.map((product) => (
-                        <ProductCard key={product.id} product={product} />
-                    ))}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {sortedProducts.length > 0 ? (
+                        sortedProducts.map((product) => (
+                            <ProductCard
+                                key={product._id.toString()}
+                                product={{
+                                    id: product._id.toString(),
+                                    name: product.name,
+                                    price: product.price,
+                                    originalPrice: product.originalPrice,
+                                    image: product.image,
+                                    category: product.category,
+                                }}
+                            />
+                        ))
+                    ) : (
+                        <div className="col-span-full text-center py-12">
+                            <p className="text-muted-foreground">No products found.</p>
+                        </div>
+                    )}
                 </div>
 
-                {/* Show more button */}
-                <div className="mt-12 text-center">
-                    <button className="px-6 py-3 bg-primary text-primary-foreground font-medium rounded-md hover:bg-primary/90 transition-colors">
-                        Load More Products
-                    </button>
-                </div>
+                {/* Show more button - could implement pagination here */}
+                {sortedProducts.length > 0 && (
+                    <div className="mt-12 text-center">
+                        <button className="px-6 py-3 bg-primary text-primary-foreground font-medium rounded-md hover:bg-primary/90 transition-colors">
+                            Load More Products
+                        </button>
+                    </div>
+                )}
             </div>
         </>
     );

@@ -20,12 +20,16 @@ export const createOrUpdateUser = mutation({
 
         const now = Date.now();
 
+        // Check if this email should be admin
+        const isAdmin = args.email === "bidhandhakal365@gmail.com";
+
         if (existingUser) {
             // Update existing user
             const userId = await ctx.db.patch(existingUser._id, {
                 email: args.email,
                 name: args.name,
                 imageUrl: args.imageUrl,
+                isAdmin: isAdmin,
                 updatedAt: now,
             });
             return userId;
@@ -36,6 +40,7 @@ export const createOrUpdateUser = mutation({
                 email: args.email,
                 name: args.name || "",
                 imageUrl: args.imageUrl || "",
+                isAdmin: isAdmin,
                 preferences: {
                     theme: "system",
                     receiveEmails: true,
@@ -62,6 +67,23 @@ export const getUserByClerkId = query({
         }
 
         return user;
+    },
+});
+
+// Function to check if user is admin
+export const isUserAdmin = query({
+    args: { clerkId: v.string() },
+    handler: async (ctx, args) => {
+        const user = await ctx.db
+            .query("users")
+            .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkId))
+            .first();
+
+        if (!user) {
+            return false;
+        }
+
+        return user.isAdmin === true;
     },
 });
 

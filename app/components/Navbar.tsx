@@ -3,12 +3,14 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X, ShoppingCart, ShoppingBag, LogIn } from "lucide-react";
+import { Menu, X, ShoppingCart, ShoppingBag, LogIn, ShieldCheck } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useAuth as useClerkAuth, useClerk, UserButton } from "@clerk/nextjs";
+import { useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
 
 const navLinks = [
     { name: "Home", href: "/" },
@@ -26,10 +28,13 @@ export default function Navbar() {
     const [imageError, setImageError] = useState(false);
     const { getCartCount } = useCart();
     const { requireAuth } = useAuth();
-    const { isSignedIn } = useClerkAuth();
+    const { isSignedIn, userId } = useClerkAuth();
     const router = useRouter();
     const cartItemsCount = getCartCount();
     const clerk = useClerk();
+
+    // Check if user is admin
+    const isAdmin = useQuery(api.users.isUserAdmin, userId ? { clerkId: userId } : "skip");
 
     // Handle scroll events
     useEffect(() => {
@@ -128,6 +133,17 @@ export default function Navbar() {
                                     {link.name}
                                 </Link>
                             ))}
+
+                            {/* Admin link - only visible to admin users */}
+                            {isAdmin && (
+                                <Link
+                                    href="/admin"
+                                    className="nav-link px-3 py-1 rounded-md text-primary flex items-center gap-1 hover:bg-primary/10 transition-colors"
+                                >
+                                    <ShieldCheck size={16} />
+                                    Admin
+                                </Link>
+                            )}
                         </div>
                     </div>
 
@@ -220,6 +236,18 @@ export default function Navbar() {
                             {link.name}
                         </Link>
                     ))}
+
+                    {/* Admin link in mobile menu - only visible to admin users */}
+                    {isAdmin && (
+                        <Link
+                            href="/admin"
+                            className="flex items-center gap-2 px-4 py-3 rounded-md text-base font-medium text-primary hover:bg-primary/10 transition-colors"
+                            onClick={() => setIsMenuOpen(false)}
+                        >
+                            <ShieldCheck size={18} />
+                            Admin Dashboard
+                        </Link>
+                    )}
                 </div>
 
                 <div className="mt-4 border-t border-border pt-4 px-4 space-y-2">
