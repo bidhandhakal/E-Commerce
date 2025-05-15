@@ -117,7 +117,7 @@ export default function AdminDashboard() {
                             ) : (
                                 <tr>
                                     <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
-                                        No products found. Click "Add New Product" to create your first product.
+                                        No products found. Click &quot;Add New Product&quot; to create your first product.
                                     </td>
                                 </tr>
                             )}
