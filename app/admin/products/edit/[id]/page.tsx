@@ -10,7 +10,13 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Id } from "../../../../../convex/_generated/dataModel";
 
-export default function EditProductPage({ params }: { params: { id: string } }) {
+interface PageProps {
+    params: {
+        id: string;
+    };
+}
+
+export default function EditProductPage({ params }: PageProps) {
     const { user } = useUser();
     const { isLoaded, isSignedIn } = useAuth();
     const [loading, setLoading] = useState(true);
