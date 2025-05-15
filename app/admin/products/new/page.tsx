@@ -156,8 +156,8 @@ export default function NewProductPage() {
                                 className="w-full p-3 border border-border rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary/50"
                             >
                                 <option value="">Select a category</option>
-                                <option value="Men's T-Shirts">Men's T-Shirts</option>
-                                <option value="Women's T-Shirts">Women's T-Shirts</option>
+                                <option value="Men's T-Shirts">Men&apos;s T-Shirts</option>
+                                <option value="Women's T-Shirts">Women&apos;s T-Shirts</option>
                                 <option value="Accessories">Accessories</option>
                             </select>
                         </div>

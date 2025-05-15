@@ -9,6 +9,7 @@ import { Button } from "../../../../components/ui/button";
 import Link from "next/link";
 import { ArrowLeft, AlertTriangle } from "lucide-react";
 import { Id } from "../../../../../convex/_generated/dataModel";
+import Image from "next/image";
 
 export default function DeleteProductPage({ params }: { params: { id: string } }) {
     const { user } = useUser();
@@ -93,9 +94,10 @@ export default function DeleteProductPage({ params }: { params: { id: string } }
                 <div className="border border-border rounded-lg p-6 mb-8">
                     <div className="flex gap-4 items-center">
                         <div className="h-16 w-16 rounded-md bg-secondary relative overflow-hidden flex-shrink-0">
-                            <img
+                            <Image
                                 src={product.image}
                                 alt={product.name}
+                                fill
                                 className="object-cover h-full w-full"
                             />
                         </div>

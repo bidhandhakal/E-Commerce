@@ -9,6 +9,7 @@ import { Button } from "../components/ui/button";
 import Link from "next/link";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { formatPrice } from "../lib/formatters";
+import Image from "next/image";
 
 export default function AdminDashboard() {
     const { user } = useUser();
@@ -78,9 +79,10 @@ export default function AdminDashboard() {
                                     <tr key={product._id.toString()} className="hover:bg-muted/50">
                                         <td className="px-4 py-3">
                                             <div className="h-12 w-12 rounded-md bg-secondary relative overflow-hidden">
-                                                <img
+                                                <Image
                                                     src={product.image}
                                                     alt={product.name}
+                                                    fill
                                                     className="object-cover h-full w-full"
                                                 />
                                             </div>
