@@ -2,7 +2,6 @@
 
 import { X } from "lucide-react";
 import { useClerk } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
 
 interface AuthRequiredModalProps {
     isOpen: boolean;
@@ -16,7 +15,6 @@ export default function AuthRequiredModal({
     message = "You need to sign in to access this feature.",
 }: AuthRequiredModalProps) {
     const clerk = useClerk();
-    const router = useRouter();
 
     if (!isOpen) return null;
 
