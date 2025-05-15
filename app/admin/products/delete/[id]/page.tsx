@@ -4,18 +4,18 @@ import { useState, useEffect } from "react";
 import { useUser, useAuth } from "@clerk/nextjs";
 import { api } from "../../../../../convex/_generated/api";
 import { useQuery, useMutation } from "convex/react";
-import { redirect } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import { Button } from "../../../../components/ui/button";
 import Link from "next/link";
 import { ArrowLeft, AlertTriangle } from "lucide-react";
 import { Id } from "../../../../../convex/_generated/dataModel";
 import Image from "next/image";
 
-export default function DeleteProductPage({
-    params
-}: {
-    params: { id: string }
-}) {
+export default function DeleteProductPage() {
+    // Get the ID from URL params using the useParams hook
+    const params = useParams();
+    const id = params.id as string;
+
     const { user } = useUser();
     const { isLoaded, isSignedIn } = useAuth();
     const [loading, setLoading] = useState(true);
@@ -27,7 +27,7 @@ export default function DeleteProductPage({
 
     // Get the product data
     const product = useQuery(api.products.getProduct, {
-        id: params.id as Id<"products">
+        id: id as Id<"products">
     });
 
     // Function to delete product
@@ -62,7 +62,7 @@ export default function DeleteProductPage({
 
         try {
             await deleteProduct({
-                id: params.id as Id<"products">,
+                id: id as Id<"products">,
                 clerkId: clerkId
             });
 
