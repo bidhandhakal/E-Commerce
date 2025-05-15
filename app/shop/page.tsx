@@ -58,10 +58,22 @@ export default function ShopPage() {
 
     return (
         <>
-            <div className="bg-primary text-primary-foreground py-16">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <h1 className="text-4xl sm:text-5xl font-bold mb-6">Our Collection</h1>
-                    <p className="text-lg opacity-90 max-w-2xl mx-auto">
+            <div className="relative py-24 md:py-32 overflow-hidden bg-gradient-to-b from-black/60 to-primary/80 text-primary-foreground">
+                {/* Background image - no filters */}
+                <div
+                    className="absolute inset-0 z-0 bg-cover bg-center"
+                    style={{
+                        backgroundImage: "url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1920&auto=format&fit=crop')",
+                    }}
+                ></div>
+
+                {/* Simple dark overlay to maintain text readability */}
+                <div className="absolute inset-0 z-0 bg-black/60 dark:bg-black/70"></div>
+
+                {/* Content overlay */}
+                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <h1 className="text-4xl sm:text-5xl font-bold mb-4 sm:mb-6 text-white">Our Collection</h1>
+                    <p className="text-base sm:text-lg max-w-2xl mx-auto text-white/90">
                         Discover our premium, sustainably made t-shirts designed for comfort and style
                     </p>
                 </div>
