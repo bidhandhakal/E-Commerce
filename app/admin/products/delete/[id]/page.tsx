@@ -11,13 +11,13 @@ import { ArrowLeft, AlertTriangle } from "lucide-react";
 import { Id } from "../../../../../convex/_generated/dataModel";
 import Image from "next/image";
 
-interface PageProps {
+type DeleteProductPageProps = {
     params: {
         id: string;
     };
 }
 
-export default function DeleteProductPage({ params }: PageProps) {
+export default function DeleteProductPage({ params }: DeleteProductPageProps) {
     const { user } = useUser();
     const { isLoaded, isSignedIn } = useAuth();
     const [loading, setLoading] = useState(true);
