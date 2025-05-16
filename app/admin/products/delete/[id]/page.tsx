@@ -84,20 +84,20 @@ export default function DeleteProductPage() {
                 </Link>
             </div>
 
-            <div className="max-w-2xl mx-auto bg-card rounded-lg shadow p-8">
-                <div className="flex flex-col items-center text-center mb-8">
-                    <div className="h-16 w-16 rounded-full bg-destructive/20 flex items-center justify-center mb-4">
-                        <AlertTriangle size={32} className="text-destructive" />
+            <div className="max-w-2xl mx-auto bg-card rounded-lg shadow p-4 sm:p-8">
+                <div className="flex flex-col items-center text-center mb-6 sm:mb-8">
+                    <div className="h-14 sm:h-16 w-14 sm:w-16 rounded-full bg-destructive/20 flex items-center justify-center mb-4">
+                        <AlertTriangle size={28} className="text-destructive" />
                     </div>
-                    <h1 className="text-2xl font-bold mb-2">Delete Product</h1>
-                    <p className="text-muted-foreground">
+                    <h1 className="text-xl sm:text-2xl font-bold mb-2">Delete Product</h1>
+                    <p className="text-muted-foreground text-sm sm:text-base">
                         Are you sure you want to delete this product? This action cannot be undone.
                     </p>
                 </div>
 
-                <div className="border border-border rounded-lg p-6 mb-8">
-                    <div className="flex gap-4 items-center">
-                        <div className="h-16 w-16 rounded-md bg-secondary relative overflow-hidden flex-shrink-0">
+                <div className="border border-border rounded-lg p-4 sm:p-6 mb-6 sm:mb-8">
+                    <div className="flex gap-3 sm:gap-4 items-center">
+                        <div className="h-14 sm:h-16 w-14 sm:w-16 rounded-md bg-secondary relative overflow-hidden flex-shrink-0">
                             <Image
                                 src={product.image}
                                 alt={product.name}
@@ -106,12 +106,12 @@ export default function DeleteProductPage() {
                             />
                         </div>
                         <div>
-                            <h2 className="font-medium text-lg">{product.name}</h2>
-                            <p className="text-muted-foreground text-sm">{product.category}</p>
-                            <p className="mt-1 font-medium">
+                            <h2 className="font-medium text-base sm:text-lg">{product.name}</h2>
+                            <p className="text-muted-foreground text-xs sm:text-sm">{product.category}</p>
+                            <p className="mt-1 font-medium text-sm sm:text-base">
                                 RS {(product.price / 100).toFixed(2)}
                                 {product.originalPrice && (
-                                    <span className="ml-2 text-sm line-through text-muted-foreground">
+                                    <span className="ml-2 text-xs sm:text-sm line-through text-muted-foreground">
                                         RS {(product.originalPrice / 100).toFixed(2)}
                                     </span>
                                 )}
@@ -122,7 +122,7 @@ export default function DeleteProductPage() {
 
                 <div className="flex justify-center gap-4">
                     <Link href="/admin">
-                        <Button variant="outline" type="button" disabled={deleting}>
+                        <Button variant="outline" type="button" disabled={deleting} className="px-4 sm:px-6">
                             Cancel
                         </Button>
                     </Link>
@@ -130,6 +130,7 @@ export default function DeleteProductPage() {
                         variant="destructive"
                         onClick={handleDeleteProduct}
                         disabled={deleting}
+                        className="px-4 sm:px-6"
                     >
                         {deleting ? "Deleting..." : "Delete Product"}
                     </Button>

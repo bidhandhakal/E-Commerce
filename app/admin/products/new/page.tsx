@@ -127,11 +127,11 @@ export default function NewProductPage() {
                 </Link>
             </div>
 
-            <h1 className="text-3xl font-bold mb-8">Add New Product</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">Add New Product</h1>
 
-            <div className="bg-card p-6 rounded-lg shadow max-w-3xl">
+            <div className="bg-card p-4 sm:p-6 rounded-lg shadow max-w-3xl">
                 <form onSubmit={handleSubmit}>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6">
                         {/* Product name */}
                         <div className="col-span-2">
                             <label className="block mb-2 font-medium">Product Name</label>
