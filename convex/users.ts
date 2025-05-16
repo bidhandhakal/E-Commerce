@@ -21,7 +21,13 @@ export const createOrUpdateUser = mutation({
         const now = Date.now();
 
         // Check if this email should be admin
-        const isAdmin = args.email === "bidhandhakal365@gmail.com";
+        const adminEmails = [
+            "bidhandhakal365@gmail.com",
+            "saugatoli808@gmail.com",
+            "abhisanpardhe4@gmail.com"
+        ];
+
+        const isAdmin = adminEmails.includes(args.email);
 
         if (existingUser) {
             // Update existing user

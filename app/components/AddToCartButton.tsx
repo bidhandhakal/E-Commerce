@@ -21,6 +21,9 @@ interface AddToCartButtonProps {
     showIcon?: boolean;
     variant?: "default" | "outline" | "subtle";
     size?: "sm" | "md" | "lg";
+    customQuantity?: number;
+    customSize?: string | null;
+    customColor?: string | null;
 }
 
 export default function AddToCartButton({
@@ -29,6 +32,9 @@ export default function AddToCartButton({
     showIcon = true,
     variant = "default",
     size = "md",
+    customQuantity = 1,
+    customSize = null,
+    customColor = null,
 }: AddToCartButtonProps) {
     const { addToCart } = useCart();
     const { requireAuth, isSignedIn } = useAuth();
@@ -50,8 +56,15 @@ export default function AddToCartButton({
                 }
             }
 
-            // Add item to cart (through CartContext)
-            await addToCart(product);
+            // Create a product object with the custom options if provided
+            const productToAdd = {
+                ...product,
+                size: customSize || product.size,
+                color: customColor || product.color,
+            };
+
+            // Add item to cart (through CartContext) with custom quantity
+            await addToCart(productToAdd, customQuantity);
 
             // Show success state
             setIsAdded(true);
