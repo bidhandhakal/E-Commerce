@@ -7,7 +7,7 @@ import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Id } from "../../../convex/_generated/dataModel";
 import ProductCard from "../../components/ProductCard";
-import { Minus, Plus, ShoppingCart } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import { formatPrice } from "../../lib/formatters";
 import AddToCartButton from "../../components/AddToCartButton";
 
