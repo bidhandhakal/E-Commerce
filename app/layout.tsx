@@ -9,6 +9,7 @@ import { ClientProviders } from "./providers/ClientProviders";
 import { ClerkClientProvider } from "./providers/ClerkClientProvider";
 import { ConvexClientProvider } from "./providers/ConvexClientProvider";
 import ClerkPreload from "./components/ClerkPreload";
+import { Analytics } from '@vercel/analytics/react';
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -69,6 +70,7 @@ export default function RootLayout({
                 <main className="flex-1">{children}</main>
                 <Footer />
               </div>
+              <Analytics />
             </ClientProviders>
           </ConvexClientProvider>
         </ClerkClientProvider>

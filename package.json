@@ -12,6 +12,7 @@
     "@clerk/nextjs": "^6.19.2",
     "@clerk/themes": "^2.2.44",
     "@radix-ui/react-slot": "^1.2.2",
+    "@vercel/analytics": "^1.5.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "convex": "^1.24.1",
