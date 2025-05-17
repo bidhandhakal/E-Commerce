@@ -7,7 +7,7 @@ import { useQuery } from "convex/react";
 import { redirect } from "next/navigation";
 import { Button } from "../components/ui/button";
 import Link from "next/link";
-import { Pencil, Plus, Trash2, ChevronRight } from "lucide-react";
+import { Pencil, Plus, Trash2 } from "lucide-react";
 import { formatPrice } from "../lib/formatters";
 import Image from "next/image";
 
