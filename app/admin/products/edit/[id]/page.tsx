@@ -96,8 +96,8 @@ export default function EditProductPage() {
         if (type === "checkbox") {
             const checked = (e.target as HTMLInputElement).checked;
             setFormData(prev => ({ ...prev, [name]: checked }));
-        } else if (name === "price" || name === "originalPrice") {
-            // These are stored in cents but displayed as dollars
+        } else if (name === "price" || name === "originalPrice" || name === "stock") {
+            // Convert price, originalPrice and stock to numbers
             const numValue = parseFloat(value) || 0;
             setFormData(prev => ({ ...prev, [name]: numValue }));
         } else {
@@ -121,6 +121,9 @@ export default function EditProductPage() {
                 ? formData.colors.split(",").map(c => c.trim()).filter(Boolean)
                 : undefined;
 
+            // Ensure stock is a number
+            const stockValue = typeof formData.stock === 'number' ? formData.stock : parseInt(String(formData.stock), 10) || 0;
+
             await updateProduct({
                 id: id as Id<"products">,
                 name: formData.name,
@@ -134,7 +137,7 @@ export default function EditProductPage() {
                 isNew: formData.isNew,
                 isSale: formData.isSale,
                 isActive: formData.isActive,
-                stock: formData.stock > 0 ? formData.stock : undefined,
+                stock: stockValue > 0 ? stockValue : undefined,
                 clerkId: clerkId,
             });
 
