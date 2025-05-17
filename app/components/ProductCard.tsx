@@ -42,8 +42,8 @@ export default function ProductCard({ product, hideAddToCart = false }: ProductC
 
     return (
         <div className="group relative overflow-hidden rounded-lg border border-border bg-card transition-all hover:shadow-md">
-            {/* Product image */}
-            <Link href={productUrl} className="relative block h-64 overflow-hidden bg-secondary">
+            {/* Product image - reduced height on mobile */}
+            <Link href={productUrl} className="relative block h-48 sm:h-64 overflow-hidden bg-secondary">
                 <Image
                     src={product.image}
                     alt={product.name}
@@ -60,32 +60,32 @@ export default function ProductCard({ product, hideAddToCart = false }: ProductC
                 )}
             </Link>
 
-            {/* Product info */}
-            <div className="p-4">
+            {/* Product info - reduced padding on mobile */}
+            <div className="p-2 sm:p-4">
                 <Link href={productUrl} className="block">
-                    <h3 className="mb-1 font-medium line-clamp-1 group-hover:text-primary transition-colors">
+                    <h3 className="mb-1 font-medium text-sm sm:text-base line-clamp-1 group-hover:text-primary transition-colors">
                         {product.name}
                     </h3>
                 </Link>
 
-                <p className="text-sm text-muted-foreground mb-3">
+                <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3">
                     {product.category}
                 </p>
 
                 {/* Price and stock in same row */}
-                <div className="flex justify-between items-center mb-3">
+                <div className="flex justify-between items-center mb-2 sm:mb-3">
                     <div>
                         {isOnSale ? (
                             <div className="flex items-center gap-2">
-                                <span className="font-medium">
+                                <span className="font-medium text-sm sm:text-base">
                                     {formatPrice(product.price)}
                                 </span>
-                                <span className="text-sm text-muted-foreground line-through">
+                                <span className="text-xs sm:text-sm text-muted-foreground line-through">
                                     {formatPrice(product.originalPrice as number)}
                                 </span>
                             </div>
                         ) : (
-                            <span className="font-medium">
+                            <span className="font-medium text-sm sm:text-base">
                                 {formatPrice(product.price)}
                             </span>
                         )}
