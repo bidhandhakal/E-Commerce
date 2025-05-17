@@ -14,9 +14,12 @@ const categories = [
     "New Arrivals",
 ];
 
+const PRODUCTS_PER_PAGE = 8;
+
 export default function ShopPage() {
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [sortOption, setSortOption] = useState("newest");
+    const [visibleProducts, setVisibleProducts] = useState(PRODUCTS_PER_PAGE);
 
     // Fetch products
     const productsResult = useQuery(api.products.listProducts, {
@@ -48,12 +51,24 @@ export default function ShopPage() {
         }
     });
 
+    // Get currently visible products
+    const currentProducts = sortedProducts.slice(0, visibleProducts);
+
     const handleCategorySelect = (category: string) => {
         setSelectedCategory(category);
+        // Reset visible products when changing category
+        setVisibleProducts(PRODUCTS_PER_PAGE);
     };
 
     const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSortOption(e.target.value);
+        // Reset visible products when changing sort
+        setVisibleProducts(PRODUCTS_PER_PAGE);
+    };
+
+    const handleLoadMore = () => {
+        // Show next batch of products
+        setVisibleProducts(prev => prev + PRODUCTS_PER_PAGE);
     };
 
     return (
@@ -120,8 +135,8 @@ export default function ShopPage() {
 
                 {/* Products grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
-                    {sortedProducts.length > 0 ? (
-                        sortedProducts.map((product) => (
+                    {currentProducts.length > 0 ? (
+                        currentProducts.map((product) => (
                             <ProductCard
                                 key={product._id.toString()}
                                 product={{
@@ -131,6 +146,7 @@ export default function ShopPage() {
                                     originalPrice: product.originalPrice,
                                     image: product.image,
                                     category: product.category,
+                                    stockQuantity: product.stock,
                                 }}
                             />
                         ))
@@ -141,10 +157,13 @@ export default function ShopPage() {
                     )}
                 </div>
 
-                {/* Show more button - could implement pagination here */}
-                {sortedProducts.length > 10 && (
+                {/* Show more button - now with actual functionality */}
+                {sortedProducts.length > visibleProducts && (
                     <div className="mt-12 text-center">
-                        <button className="px-6 py-3 bg-primary text-primary-foreground font-medium rounded-md hover:bg-primary/90 transition-colors">
+                        <button
+                            onClick={handleLoadMore}
+                            className="px-6 py-3 bg-primary text-primary-foreground font-medium rounded-md hover:bg-primary/90 transition-colors"
+                        >
                             Load More Products
                         </button>
                     </div>

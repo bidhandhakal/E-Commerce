@@ -111,6 +111,29 @@ export default function ProductDetailPage() {
                         )}
                     </div>
 
+                    {/* Stock Status */}
+                    <div className="mb-6">
+                        {product.stock !== undefined && (
+                            <>
+                                {product.stock <= 0 ? (
+                                    <div className="flex items-center gap-2 text-destructive">
+                                        <span className="font-medium">Out of Stock</span>
+                                    </div>
+                                ) : product.stock <= 5 ? (
+                                    <div className="flex items-center gap-2 text-amber-600 dark:text-amber-500">
+                                        <span className="font-medium">Low Stock</span>
+                                        <span>Only {product.stock} left</span>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-500">
+                                        <span className="font-medium">In Stock</span>
+                                        <span>{product.stock} available</span>
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </div>
+
                     {/* Description */}
                     <div className="mb-6">
                         <h3 className="font-medium mb-2">Description</h3>
@@ -197,6 +220,7 @@ export default function ProductDetailPage() {
                                 originalPrice: product.originalPrice,
                                 image: product.image,
                                 category: product.category,
+                                stockQuantity: product.stock,
                             }}
                             size="lg"
                             customQuantity={quantity}
@@ -223,7 +247,9 @@ export default function ProductDetailPage() {
                                     originalPrice: relatedProduct.originalPrice,
                                     image: relatedProduct.image,
                                     category: relatedProduct.category,
+                                    stockQuantity: relatedProduct.stock,
                                 }}
+                                hideAddToCart={true}
                             />
                         ))}
                     </div>

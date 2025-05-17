@@ -38,7 +38,8 @@ export default function FeaturedProducts() {
                                     price: product.price,
                                     originalPrice: product.originalPrice,
                                     image: product.image,
-                                    category: product.category
+                                    category: product.category,
+                                    stockQuantity: product.stock
                                 }}
                             />
                         ))

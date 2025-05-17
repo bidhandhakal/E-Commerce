@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ShoppingCart, Check, Loader2 } from "lucide-react";
+import { ShoppingCart, Check, Loader2, AlertCircle } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { cn } from "../lib/utils";
@@ -16,6 +16,7 @@ interface AddToCartButtonProps {
         category: string;
         size?: string;
         color?: string;
+        stockQuantity?: number;
     };
     className?: string;
     showIcon?: boolean;
@@ -41,7 +42,13 @@ export default function AddToCartButton({
     const [isAdding, setIsAdding] = useState(false);
     const [isAdded, setIsAdded] = useState(false);
 
+    // Check if the product is out of stock
+    const isOutOfStock = product.stockQuantity !== undefined && product.stockQuantity <= 0;
+
     const handleAddToCart = async () => {
+        // Don't proceed if the product is out of stock
+        if (isOutOfStock) return;
+
         setIsAdding(true);
 
         try {
@@ -103,7 +110,7 @@ export default function AddToCartButton({
     return (
         <button
             onClick={handleAddToCart}
-            disabled={isAdding || isAdded}
+            disabled={isAdding || isAdded || isOutOfStock}
             className={buttonClasses}
         >
             {isAdding && (
@@ -118,7 +125,13 @@ export default function AddToCartButton({
                     Added!
                 </>
             )}
-            {!isAdding && !isAdded && (
+            {!isAdding && !isAdded && isOutOfStock && (
+                <>
+                    <AlertCircle size={size === "sm" ? 14 : size === "md" ? 16 : 18} />
+                    Out of Stock
+                </>
+            )}
+            {!isAdding && !isAdded && !isOutOfStock && (
                 <>
                     {showIcon && (
                         <ShoppingCart
