@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import { useQuery } from "convex/react";
@@ -19,6 +19,12 @@ export default function ProductDetailPage() {
     const [selectedSize, setSelectedSize] = useState<string | null>(null);
     const [selectedColor, setSelectedColor] = useState<string | null>(null);
     const [quantity, setQuantity] = useState(1);
+
+    // State for image zoom effect
+    const [isZoomed, setIsZoomed] = useState(false);
+    const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
+    const [isDesktop, setIsDesktop] = useState(false);
+    const imageContainerRef = useRef<HTMLDivElement>(null);
 
     // Fetch the current product
     const product = useQuery(api.products.getProduct, {
@@ -49,6 +55,27 @@ export default function ProductDetailPage() {
     // Limit to 4 related products
     const limitedRelatedProducts = filteredRelatedProducts.slice(0, 4);
 
+    // Detect if device is desktop (has hover capability)
+    useEffect(() => {
+        // Check if we're in a browser environment
+        if (typeof window !== 'undefined') {
+            // Initial check
+            setIsDesktop(window.matchMedia('(min-width: 768px)').matches);
+
+            // Listen for changes
+            const mediaQuery = window.matchMedia('(min-width: 768px)');
+            const handleResize = (e: MediaQueryListEvent) => {
+                setIsDesktop(e.matches);
+            };
+
+            // Modern browsers
+            if (mediaQuery.addEventListener) {
+                mediaQuery.addEventListener('change', handleResize);
+                return () => mediaQuery.removeEventListener('change', handleResize);
+            }
+        }
+    }, []);
+
     if (!product) {
         return (
             <div className="flex h-screen items-center justify-center">
@@ -67,17 +94,37 @@ export default function ProductDetailPage() {
         setQuantity(prev => Math.max(prev - 1, 1)); // Minimum 1 item
     };
 
+    // Handle mouse movement for zoom effect - only on desktop
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (!imageContainerRef.current || !isDesktop) return;
+
+        const { left, top, width, height } = imageContainerRef.current.getBoundingClientRect();
+        const x = ((e.clientX - left) / width) * 100;
+        const y = ((e.clientY - top) / height) * 100;
+
+        setZoomPosition({ x, y });
+    };
+
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
             {/* Product Detail Section */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-                {/* Product Image */}
-                <div className="relative aspect-square overflow-hidden rounded-lg bg-secondary">
+                {/* Product Image with Zoom Effect - PC Only */}
+                <div
+                    ref={imageContainerRef}
+                    className={`relative aspect-square overflow-hidden rounded-lg bg-secondary ${isDesktop ? 'cursor-zoom-in' : ''}`}
+                    onMouseEnter={() => isDesktop && setIsZoomed(true)}
+                    onMouseLeave={() => isDesktop && setIsZoomed(false)}
+                    onMouseMove={handleMouseMove}
+                >
                     <Image
                         src={product.image}
                         alt={product.name}
                         fill
-                        className="object-cover"
+                        className={`object-cover ${isDesktop ? 'transition-transform duration-200' : ''} ${isZoomed && isDesktop ? 'scale-150' : 'scale-100'}`}
+                        style={isZoomed && isDesktop ? {
+                            transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`
+                        } : undefined}
                     />
 
                     {/* Sale badge */}
