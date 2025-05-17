@@ -77,5 +77,24 @@ export default defineSchema({
         .index("by_category", ["category"])
         .index("by_creation", ["createdAt"]),
 
+    // Table to store contact form messages
+    contactMessages: defineTable({
+        // User info (if authenticated)
+        userId: v.optional(v.id("users")),
+        // Contact form data
+        name: v.string(),
+        email: v.string(),
+        subject: v.string(),
+        message: v.string(),
+        // Status tracking
+        status: v.string(), // "new", "read", "replied", "archived"
+        // Timestamps
+        createdAt: v.number(),
+        updatedAt: v.optional(v.number()),
+    })
+        .index("by_status", ["status"])
+        .index("by_user", ["userId"])
+        .index("by_creation", ["createdAt"]),
+
     // You can add more tables as needed here
 }); 
