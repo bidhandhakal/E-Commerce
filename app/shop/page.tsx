@@ -133,22 +133,26 @@ export default function ShopPage() {
                     </div>
                 </div>
 
-                {/* Products grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
+                {/* Staggered products grid with smaller gaps */}
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
                     {currentProducts.length > 0 ? (
-                        currentProducts.map((product) => (
-                            <ProductCard
+                        currentProducts.map((product, index) => (
+                            <div
                                 key={product._id.toString()}
-                                product={{
-                                    id: product._id.toString(),
-                                    name: product.name,
-                                    price: product.price,
-                                    originalPrice: product.originalPrice,
-                                    image: product.image,
-                                    category: product.category,
-                                    stockQuantity: product.stock,
-                                }}
-                            />
+                                className={`${index % 2 === 0 ? "" : "transform translate-y-4"}`}
+                            >
+                                <ProductCard
+                                    product={{
+                                        id: product._id.toString(),
+                                        name: product.name,
+                                        price: product.price,
+                                        originalPrice: product.originalPrice,
+                                        image: product.image,
+                                        category: product.category,
+                                        stockQuantity: product.stock,
+                                    }}
+                                />
+                            </div>
                         ))
                     ) : (
                         <div className="col-span-full text-center py-12">
