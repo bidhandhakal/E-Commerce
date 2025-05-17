@@ -101,7 +101,7 @@ export default function ContactPage() {
                             </div>
                             <div>
                                 <h3 className="font-medium text-foreground mb-1">Call Us</h3>
-                                <p className="text-muted-foreground">(+977)976831693</p>
+                                <p className="text-muted-foreground">(+977)9768316936</p>
                                 <p className="text-muted-foreground">Mon-Fri: 11am - 6pm</p>
                             </div>
                         </div>
