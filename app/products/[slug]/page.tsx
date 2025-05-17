@@ -52,8 +52,8 @@ export default function ProductDetailPage() {
         p._id.toString() !== productId
     ) || [];
 
-    // Limit to 4 related products
-    const limitedRelatedProducts = filteredRelatedProducts.slice(0, 4);
+    // Show up to 8 related products instead of 4
+    const limitedRelatedProducts = filteredRelatedProducts.slice(0, 8);
 
     // Detect if device is desktop (has hover capability)
     useEffect(() => {
@@ -283,7 +283,7 @@ export default function ProductDetailPage() {
             {limitedRelatedProducts.length > 0 && (
                 <div>
                     <h2 className="text-2xl font-bold mb-6">You Might Also Like</h2>
-                    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
                         {limitedRelatedProducts.map((relatedProduct) => (
                             <ProductCard
                                 key={relatedProduct._id.toString()}
