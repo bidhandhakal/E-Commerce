@@ -283,21 +283,25 @@ export default function ProductDetailPage() {
             {limitedRelatedProducts.length > 0 && (
                 <div>
                     <h2 className="text-2xl font-bold mb-6">You Might Also Like</h2>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
-                        {limitedRelatedProducts.map((relatedProduct) => (
-                            <ProductCard
-                                key={relatedProduct._id.toString()}
-                                product={{
-                                    id: relatedProduct._id.toString(),
-                                    name: relatedProduct.name,
-                                    price: relatedProduct.price,
-                                    originalPrice: relatedProduct.originalPrice,
-                                    image: relatedProduct.image,
-                                    category: relatedProduct.category,
-                                    stockQuantity: relatedProduct.stock,
-                                }}
-                                hideAddToCart={true}
-                            />
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
+                        {limitedRelatedProducts.map((product, index) => (
+                            <div
+                                key={product._id.toString()}
+                                className={`${index % 2 === 0 ? "" : "transform translate-y-4"}`}
+                            >
+                                <ProductCard
+                                    product={{
+                                        id: product._id.toString(),
+                                        name: product.name,
+                                        price: product.price,
+                                        originalPrice: product.originalPrice,
+                                        image: product.image,
+                                        category: product.category,
+                                        stockQuantity: product.stock,
+                                    }}
+                                    hideAddToCart={true}
+                                />
+                            </div>
                         ))}
                     </div>
                 </div>
