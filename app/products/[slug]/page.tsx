@@ -106,9 +106,9 @@ export default function ProductDetailPage() {
     };
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 sm:py-8">
             {/* Product Detail Section */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 lg:gap-8 mb-8 md:mb-10">
                 {/* Product Image with Zoom Effect - PC Only */}
                 <div
                     ref={imageContainerRef}
@@ -136,68 +136,68 @@ export default function ProductDetailPage() {
                 </div>
 
                 {/* Product Details */}
-                <div className="flex flex-col">
-                    <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-                    <p className="text-muted-foreground mb-4">{product.category}</p>
+                <div className="flex flex-col space-y-3 md:space-y-4">
+                    <div>
+                        <h1 className="text-lg sm:text-2xl md:text-3xl font-bold">{product.name}</h1>
+                        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1">{product.category}</p>
+                    </div>
 
                     {/* Price */}
-                    <div className="mb-6">
+                    <div>
                         {isOnSale ? (
                             <div className="flex items-center gap-2">
-                                <span className="text-2xl font-semibold">
+                                <span className="text-base sm:text-xl md:text-2xl font-semibold">
                                     {formatPrice(product.price)}
                                 </span>
-                                <span className="text-lg text-muted-foreground line-through">
+                                <span className="text-xs sm:text-base md:text-lg text-muted-foreground line-through">
                                     {formatPrice(product.originalPrice as number)}
                                 </span>
                             </div>
                         ) : (
-                            <span className="text-2xl font-semibold">
+                            <span className="text-base sm:text-xl md:text-2xl font-semibold">
                                 {formatPrice(product.price)}
                             </span>
                         )}
                     </div>
 
                     {/* Stock Status */}
-                    <div className="mb-6">
-                        {product.stock !== undefined && (
-                            <>
-                                {product.stock <= 0 ? (
-                                    <div className="flex items-center gap-2 text-destructive">
-                                        <span className="font-medium">Out of Stock</span>
-                                    </div>
-                                ) : product.stock <= 5 ? (
-                                    <div className="flex items-center gap-2 text-amber-600 dark:text-amber-500">
-                                        <span className="font-medium">Low Stock</span>
-                                        <span>Only {product.stock} left</span>
-                                    </div>
-                                ) : (
-                                    <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-500">
-                                        <span className="font-medium">In Stock</span>
-                                        <span>{product.stock} available</span>
-                                    </div>
-                                )}
-                            </>
-                        )}
-                    </div>
+                    {product.stock !== undefined && (
+                        <div className="text-xs sm:text-sm">
+                            {product.stock <= 0 ? (
+                                <div className="text-destructive font-medium">
+                                    Out of Stock
+                                </div>
+                            ) : product.stock <= 5 ? (
+                                <div className="text-amber-600 dark:text-amber-500">
+                                    <span className="font-medium">Low Stock</span>
+                                    <span className="ml-1 sm:ml-2">Only {product.stock} left</span>
+                                </div>
+                            ) : (
+                                <div className="text-emerald-600 dark:text-emerald-500">
+                                    <span className="font-medium">In Stock</span>
+                                    <span className="ml-1 sm:ml-2">{product.stock} available</span>
+                                </div>
+                            )}
+                        </div>
+                    )}
 
                     {/* Description */}
-                    <div className="mb-6">
-                        <h3 className="font-medium mb-2">Description</h3>
-                        <p className="text-muted-foreground">
+                    <div>
+                        <h3 className="text-sm sm:text-base font-medium mb-0.5 sm:mb-1">Description</h3>
+                        <p className="text-xs sm:text-sm text-muted-foreground">
                             {product.description || "No description available."}
                         </p>
                     </div>
 
                     {/* Sizes */}
                     {product.sizes && product.sizes.length > 0 && (
-                        <div className="mb-6">
-                            <h3 className="font-medium mb-2">Size</h3>
-                            <div className="flex flex-wrap gap-2">
+                        <div>
+                            <h3 className="text-sm sm:text-base font-medium mb-1 sm:mb-1.5">Size</h3>
+                            <div className="flex flex-wrap gap-1.5 sm:gap-2">
                                 {product.sizes.map((size) => (
                                     <button
                                         key={size}
-                                        className={`px-4 py-2 border rounded-md text-sm font-medium 
+                                        className={`px-2.5 sm:px-3 py-1 sm:py-1.5 border rounded-md text-xs sm:text-sm font-medium 
                                             ${selectedSize === size
                                                 ? "border-primary bg-primary/10"
                                                 : "border-border"
@@ -213,13 +213,13 @@ export default function ProductDetailPage() {
 
                     {/* Colors */}
                     {product.colors && product.colors.length > 0 && (
-                        <div className="mb-6">
-                            <h3 className="font-medium mb-2">Color</h3>
-                            <div className="flex flex-wrap gap-2">
+                        <div>
+                            <h3 className="text-sm sm:text-base font-medium mb-1 sm:mb-1.5">Color</h3>
+                            <div className="flex flex-wrap gap-1.5 sm:gap-2">
                                 {product.colors.map((color) => (
                                     <button
                                         key={color}
-                                        className={`px-4 py-2 border rounded-md text-sm font-medium 
+                                        className={`px-2.5 sm:px-3 py-1 sm:py-1.5 border rounded-md text-xs sm:text-sm font-medium 
                                             ${selectedColor === color
                                                 ? "border-primary bg-primary/10"
                                                 : "border-border"
@@ -234,61 +234,62 @@ export default function ProductDetailPage() {
                     )}
 
                     {/* Quantity */}
-                    <div className="mb-6">
-                        <h3 className="font-medium mb-2">Quantity</h3>
+                    <div>
+                        <h3 className="text-sm sm:text-base font-medium mb-1 sm:mb-1.5">Quantity</h3>
                         <div className="flex items-center">
                             <button
                                 onClick={decrementQuantity}
-                                className="px-3 py-1 border border-border rounded-l-md"
+                                className="px-2 sm:px-3 py-0.5 sm:py-1 border border-border rounded-l-md hover:bg-secondary transition-colors"
                                 disabled={quantity <= 1}
                             >
-                                <Minus size={16} />
+                                <Minus size={14} className="sm:hidden" />
+                                <Minus size={16} className="hidden sm:block" />
                             </button>
-                            <span className="px-4 py-1 border-y border-border text-center w-12">
+                            <span className="px-3 sm:px-4 py-0.5 sm:py-1 border-y border-border text-center w-8 sm:w-12 text-xs sm:text-sm">
                                 {quantity}
                             </span>
                             <button
                                 onClick={incrementQuantity}
-                                className="px-3 py-1 border border-border rounded-r-md"
+                                className="px-2 sm:px-3 py-0.5 sm:py-1 border border-border rounded-r-md hover:bg-secondary transition-colors"
                                 disabled={quantity >= 10}
                             >
-                                <Plus size={16} />
+                                <Plus size={14} className="sm:hidden" />
+                                <Plus size={16} className="hidden sm:block" />
                             </button>
                         </div>
                     </div>
 
                     {/* Add to Cart */}
                     {product._id && (
-                        <AddToCartButton
-                            product={{
-                                id: product._id.toString(),
-                                name: product.name,
-                                price: product.price,
-                                originalPrice: product.originalPrice,
-                                image: product.image,
-                                category: product.category,
-                                stockQuantity: product.stock,
-                            }}
-                            size="lg"
-                            customQuantity={quantity}
-                            customSize={selectedSize}
-                            customColor={selectedColor}
-                            className="mt-2"
-                        />
+                        <div className="pt-1 sm:pt-2">
+                            <AddToCartButton
+                                product={{
+                                    id: product._id.toString(),
+                                    name: product.name,
+                                    price: product.price,
+                                    originalPrice: product.originalPrice,
+                                    image: product.image,
+                                    category: product.category,
+                                    stockQuantity: product.stock,
+                                }}
+                                size="md"
+                                customQuantity={quantity}
+                                customSize={selectedSize}
+                                customColor={selectedColor}
+                                className="w-full md:w-auto"
+                            />
+                        </div>
                     )}
                 </div>
             </div>
 
             {/* Related Products Section */}
             {limitedRelatedProducts.length > 0 && (
-                <div>
-                    <h2 className="text-2xl font-bold mb-6">You Might Also Like</h2>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
-                        {limitedRelatedProducts.map((product, index) => (
-                            <div
-                                key={product._id.toString()}
-                                className={`${index % 2 === 0 ? "" : "transform translate-y-4"}`}
-                            >
+                <div className="mt-6 sm:mt-8 md:mt-12">
+                    <h2 className="text-base sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4 md:mb-6">You Might Also Like</h2>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3 md:gap-4">
+                        {limitedRelatedProducts.map((product) => (
+                            <div key={product._id.toString()}>
                                 <ProductCard
                                     product={{
                                         id: product._id.toString(),

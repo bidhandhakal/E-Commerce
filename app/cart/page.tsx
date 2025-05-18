@@ -8,7 +8,6 @@ import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { cn } from "../lib/utils";
 import { formatPrice } from "../lib/formatters";
-import { CartItem } from "../context/CartContext"; // Import the CartItem type
 
 export default function CartPage() {
     const {
