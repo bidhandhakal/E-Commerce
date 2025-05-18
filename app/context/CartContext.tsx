@@ -23,6 +23,7 @@ export interface CartItem {
     quantity: number;
     size?: string;
     color?: string;
+    productId?: string;
 }
 
 // Extended interface to handle Convex items

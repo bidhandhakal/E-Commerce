@@ -10,11 +10,6 @@ import { cn } from "../lib/utils";
 import { formatPrice } from "../lib/formatters";
 import { CartItem } from "../context/CartContext"; // Import the CartItem type
 
-// Extended CartItem type that includes productId
-interface CartItemWithProductId extends CartItem {
-    productId?: string;
-}
-
 export default function CartPage() {
     const {
         cartItems,
@@ -98,9 +93,9 @@ export default function CartPage() {
                     {/* Mobile Cart View */}
                     <div className="block lg:hidden space-y-4">
                         {cartItems.map((item) => {
-                            // In Convex implementation, the productId is stored and id is the cart item id
-                            // For non-Convex cart items, use the item.id as the product ID
-                            const productId = (item as any).productId || item.id;
+                            // Use productId property that we've added to the CartItem interface
+                            // TypeScript will recognize this as optional, avoiding the need for 'any'
+                            const productId = item.productId || item.id;
 
                             return (
                                 <div key={item.id} className="bg-card rounded-lg shadow-sm border border-border p-4">
@@ -237,8 +232,8 @@ export default function CartPage() {
                                 </thead>
                                 <tbody className="bg-card divide-y divide-border">
                                     {cartItems.map((item) => {
-                                        // Use productId if it exists, otherwise fall back to id 
-                                        const productId = (item as any).productId || item.id;
+                                        // Use productId property that we've added to the CartItem interface
+                                        const productId = item.productId || item.id;
 
                                         return (
                                             <tr key={item.id}>
