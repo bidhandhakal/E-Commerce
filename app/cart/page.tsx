@@ -8,6 +8,12 @@ import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { cn } from "../lib/utils";
 import { formatPrice } from "../lib/formatters";
+import { CartItem } from "../context/CartContext"; // Import the CartItem type
+
+// Extended CartItem type that includes productId
+interface CartItemWithProductId extends CartItem {
+    productId?: string;
+}
 
 export default function CartPage() {
     const {
@@ -91,91 +97,103 @@ export default function CartPage() {
                 <div className="flex-1">
                     {/* Mobile Cart View */}
                     <div className="block lg:hidden space-y-4">
-                        {cartItems.map((item) => (
-                            <div key={item.id} className="bg-card rounded-lg shadow-sm border border-border p-4">
-                                <div className="flex gap-4">
-                                    {/* Product image */}
-                                    <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border border-border bg-secondary">
-                                        <Image
-                                            src={item.image}
-                                            alt={item.name}
-                                            width={80}
-                                            height={80}
-                                            className="h-full w-full object-cover object-center"
-                                        />
-                                    </div>
+                        {cartItems.map((item) => {
+                            // In Convex implementation, the productId is stored and id is the cart item id
+                            // For non-Convex cart items, use the item.id as the product ID
+                            const productId = (item as any).productId || item.id;
 
-                                    {/* Product details */}
-                                    <div className="flex-1">
-                                        <h3 className="text-sm font-medium">{item.name}</h3>
-                                        {item.size && (
-                                            <p className="mt-1 text-xs text-muted-foreground">
-                                                Size: {item.size}
-                                            </p>
-                                        )}
-                                        {item.color && (
-                                            <p className="mt-1 text-xs text-muted-foreground">
-                                                Color: {item.color}
-                                            </p>
-                                        )}
+                            return (
+                                <div key={item.id} className="bg-card rounded-lg shadow-sm border border-border p-4">
+                                    <div className="flex gap-4">
+                                        {/* Product image */}
+                                        <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border border-border bg-secondary">
+                                            <Link href={`/products/${productId}`}>
+                                                <Image
+                                                    src={item.image}
+                                                    alt={item.name}
+                                                    width={80}
+                                                    height={80}
+                                                    className="h-full w-full object-cover object-center cursor-pointer"
+                                                />
+                                            </Link>
+                                        </div>
 
-                                        {/* Price */}
-                                        <div className="text-sm mt-1">
-                                            {item.originalPrice && item.originalPrice > item.price ? (
-                                                <>
+                                        {/* Product details */}
+                                        <div className="flex-1">
+                                            <h3 className="text-sm font-medium">
+                                                <Link href={`/products/${productId}`} className="hover:text-primary transition-colors">
+                                                    {item.name}
+                                                </Link>
+                                            </h3>
+                                            {item.size && (
+                                                <p className="mt-1 text-xs text-muted-foreground">
+                                                    Size: {item.size}
+                                                </p>
+                                            )}
+                                            {item.color && (
+                                                <p className="mt-1 text-xs text-muted-foreground">
+                                                    Color: {item.color}
+                                                </p>
+                                            )}
+
+                                            {/* Price */}
+                                            <div className="text-sm mt-1">
+                                                {item.originalPrice && item.originalPrice > item.price ? (
+                                                    <>
+                                                        <span className="text-foreground font-medium">
+                                                            {formatPrice(item.price)}
+                                                        </span>
+                                                        <span className="ml-2 line-through text-muted-foreground">
+                                                            {formatPrice(item.originalPrice)}
+                                                        </span>
+                                                    </>
+                                                ) : (
                                                     <span className="text-foreground font-medium">
                                                         {formatPrice(item.price)}
                                                     </span>
-                                                    <span className="ml-2 line-through text-muted-foreground">
-                                                        {formatPrice(item.originalPrice)}
-                                                    </span>
-                                                </>
-                                            ) : (
-                                                <span className="text-foreground font-medium">
-                                                    {formatPrice(item.price)}
-                                                </span>
-                                            )}
+                                                )}
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    {/* Remove button */}
-                                    <button
-                                        onClick={() => removeFromCart(item.id)}
-                                        className="text-destructive hover:text-destructive/80 transition-colors self-start"
-                                        aria-label="Remove item"
-                                    >
-                                        <Trash2 size={18} />
-                                    </button>
-                                </div>
-
-                                {/* Quantity and total - in a row at the bottom */}
-                                <div className="mt-4 flex items-center justify-between">
-                                    <div className="flex items-center border border-border rounded-md">
+                                        {/* Remove button */}
                                         <button
-                                            className="p-2 border-r border-border hover:bg-muted transition-colors"
-                                            onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
-                                            aria-label="Decrease quantity"
+                                            onClick={() => removeFromCart(item.id)}
+                                            className="text-destructive hover:text-destructive/80 transition-colors self-start"
+                                            aria-label="Remove item"
                                         >
-                                            <Minus size={16} className="text-muted-foreground" />
-                                        </button>
-                                        <div className="flex-1 px-4 py-1.5 text-center min-w-[36px]">
-                                            {item.quantity}
-                                        </div>
-                                        <button
-                                            className="p-2 border-l border-border hover:bg-muted transition-colors"
-                                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                            aria-label="Increase quantity"
-                                        >
-                                            <Plus size={16} className="text-muted-foreground" />
+                                            <Trash2 size={18} />
                                         </button>
                                     </div>
 
-                                    <div className="text-sm font-medium">
-                                        Total: {formatPrice(item.price * item.quantity)}
+                                    {/* Quantity and total - in a row at the bottom */}
+                                    <div className="mt-4 flex items-center justify-between">
+                                        <div className="flex items-center border border-border rounded-md">
+                                            <button
+                                                className="p-2 border-r border-border hover:bg-muted transition-colors"
+                                                onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                                                aria-label="Decrease quantity"
+                                            >
+                                                <Minus size={16} className="text-muted-foreground" />
+                                            </button>
+                                            <div className="flex-1 px-4 py-1.5 text-center min-w-[36px]">
+                                                {item.quantity}
+                                            </div>
+                                            <button
+                                                className="p-2 border-l border-border hover:bg-muted transition-colors"
+                                                onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                                aria-label="Increase quantity"
+                                            >
+                                                <Plus size={16} className="text-muted-foreground" />
+                                            </button>
+                                        </div>
+
+                                        <div className="text-sm font-medium">
+                                            Total: {formatPrice(item.price * item.quantity)}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            )
+                        })}
 
                         {/* Mobile cart actions */}
                         <div className="bg-card rounded-lg shadow-sm border border-border p-4 flex justify-between">
@@ -218,100 +236,109 @@ export default function CartPage() {
                                     </tr>
                                 </thead>
                                 <tbody className="bg-card divide-y divide-border">
-                                    {cartItems.map((item) => (
-                                        <tr key={item.id}>
-                                            {/* Product info */}
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="flex items-center">
-                                                    <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border border-border bg-secondary">
-                                                        <Image
-                                                            src={item.image}
-                                                            alt={item.name}
-                                                            width={80}
-                                                            height={80}
-                                                            className="h-full w-full object-cover object-center"
-                                                        />
-                                                    </div>
-                                                    <div className="ml-4">
-                                                        <h3 className="text-sm font-medium">
-                                                            {item.name}
-                                                        </h3>
-                                                        {item.size && (
-                                                            <p className="mt-1 text-xs text-muted-foreground">
-                                                                Size: {item.size}
-                                                            </p>
-                                                        )}
-                                                        {item.color && (
-                                                            <p className="mt-1 text-xs text-muted-foreground">
-                                                                Color: {item.color}
-                                                            </p>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </td>
+                                    {cartItems.map((item) => {
+                                        // Use productId if it exists, otherwise fall back to id 
+                                        const productId = (item as any).productId || item.id;
 
-                                            {/* Price */}
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm">
-                                                    {item.originalPrice && item.originalPrice > item.price ? (
-                                                        <>
+                                        return (
+                                            <tr key={item.id}>
+                                                {/* Product info */}
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <div className="flex items-center">
+                                                        <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border border-border bg-secondary">
+                                                            <Link href={`/products/${productId}`}>
+                                                                <Image
+                                                                    src={item.image}
+                                                                    alt={item.name}
+                                                                    width={80}
+                                                                    height={80}
+                                                                    className="h-full w-full object-cover object-center cursor-pointer"
+                                                                />
+                                                            </Link>
+                                                        </div>
+                                                        <div className="ml-4">
+                                                            <h3 className="text-sm font-medium">
+                                                                <Link href={`/products/${productId}`} className="hover:text-primary transition-colors">
+                                                                    {item.name}
+                                                                </Link>
+                                                            </h3>
+                                                            {item.size && (
+                                                                <p className="mt-1 text-xs text-muted-foreground">
+                                                                    Size: {item.size}
+                                                                </p>
+                                                            )}
+                                                            {item.color && (
+                                                                <p className="mt-1 text-xs text-muted-foreground">
+                                                                    Color: {item.color}
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+                                                {/* Price */}
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <div className="text-sm">
+                                                        {item.originalPrice && item.originalPrice > item.price ? (
+                                                            <>
+                                                                <span className="text-foreground font-medium">
+                                                                    {formatPrice(item.price)}
+                                                                </span>
+                                                                <span className="ml-2 line-through text-muted-foreground">
+                                                                    {formatPrice(item.originalPrice)}
+                                                                </span>
+                                                            </>
+                                                        ) : (
                                                             <span className="text-foreground font-medium">
                                                                 {formatPrice(item.price)}
                                                             </span>
-                                                            <span className="ml-2 line-through text-muted-foreground">
-                                                                {formatPrice(item.originalPrice)}
-                                                            </span>
-                                                        </>
-                                                    ) : (
-                                                        <span className="text-foreground font-medium">
-                                                            {formatPrice(item.price)}
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            </td>
-
-                                            {/* Quantity */}
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="flex items-center border border-border rounded-md w-28">
-                                                    <button
-                                                        className="p-2 border-r border-border hover:bg-muted transition-colors"
-                                                        onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
-                                                        aria-label="Decrease quantity"
-                                                    >
-                                                        <Minus size={16} />
-                                                    </button>
-                                                    <div className="flex-1 text-center py-2">
-                                                        {item.quantity}
+                                                        )}
                                                     </div>
+                                                </td>
+
+                                                {/* Quantity */}
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <div className="flex items-center border border-border rounded-md w-28">
+                                                        <button
+                                                            className="p-2 border-r border-border hover:bg-muted transition-colors"
+                                                            onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                                                            aria-label="Decrease quantity"
+                                                        >
+                                                            <Minus size={16} />
+                                                        </button>
+                                                        <div className="flex-1 text-center py-2">
+                                                            {item.quantity}
+                                                        </div>
+                                                        <button
+                                                            className="p-2 border-l border-border hover:bg-muted transition-colors"
+                                                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                                            aria-label="Increase quantity"
+                                                        >
+                                                            <Plus size={16} />
+                                                        </button>
+                                                    </div>
+                                                </td>
+
+                                                {/* Total */}
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <div className="text-sm font-medium">
+                                                        {formatPrice(item.price * item.quantity)}
+                                                    </div>
+                                                </td>
+
+                                                {/* Remove button */}
+                                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                     <button
-                                                        className="p-2 border-l border-border hover:bg-muted transition-colors"
-                                                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                                        aria-label="Increase quantity"
+                                                        onClick={() => removeFromCart(item.id)}
+                                                        className="text-destructive hover:text-destructive/80 transition-colors"
+                                                        aria-label="Remove item"
                                                     >
-                                                        <Plus size={16} />
+                                                        <Trash2 size={18} />
                                                     </button>
-                                                </div>
-                                            </td>
-
-                                            {/* Total */}
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm font-medium">
-                                                    {formatPrice(item.price * item.quantity)}
-                                                </div>
-                                            </td>
-
-                                            {/* Remove button */}
-                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                <button
-                                                    onClick={() => removeFromCart(item.id)}
-                                                    className="text-destructive hover:text-destructive/80 transition-colors"
-                                                    aria-label="Remove item"
-                                                >
-                                                    <Trash2 size={18} />
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
+                                                </td>
+                                            </tr>
+                                        )
+                                    })}
                                 </tbody>
                             </table>
                         </div>
