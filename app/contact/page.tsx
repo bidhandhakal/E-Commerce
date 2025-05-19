@@ -21,7 +21,7 @@ export default function ContactPage() {
     const [submitSuccess, setSubmitSuccess] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
 
-    // Get Convex mutation function
+
     const submitContactMessage = useMutation(api.contact.submitContactMessage);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -36,14 +36,12 @@ export default function ContactPage() {
         e.preventDefault();
         setSubmitError(null);
 
-        // Check if user is authenticated
         const isAuthorized = await requireAuth("You need to sign in to send us a message.");
 
         if (isAuthorized) {
             setIsSubmitting(true);
 
             try {
-                // Submit the contact message to the database
                 await submitContactMessage({
                     name: formData.name,
                     email: formData.email,
@@ -60,7 +58,6 @@ export default function ContactPage() {
                     message: ""
                 });
 
-                // Reset success message after 5 seconds
                 setTimeout(() => {
                     setSubmitSuccess(false);
                 }, 5000);
