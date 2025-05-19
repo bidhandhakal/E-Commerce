@@ -21,10 +21,8 @@ export default function CartPage() {
     const { isSignedIn, requireAuth } = useAuth();
     const [isCheckingOut, setIsCheckingOut] = useState(false);
 
-    // Check if cart is empty
     const isEmpty = cartItems.length === 0;
 
-    // Require authentication before page loads
     useEffect(() => {
         const checkAuth = async () => {
             await requireAuth("You need to sign in to view your cart");
@@ -33,7 +31,6 @@ export default function CartPage() {
         checkAuth();
     }, [requireAuth]);
 
-    // Handle checkout button click
     const handleCheckout = async () => {
         if (!isSignedIn) {
             await requireAuth("You need to sign in to checkout");
@@ -42,14 +39,12 @@ export default function CartPage() {
 
         setIsCheckingOut(true);
 
-        // Simulate processing (in a real app, you&apos;d redirect to checkout)
         setTimeout(() => {
             alert("Checkout functionality would go here in a real app!");
             setIsCheckingOut(false);
         }, 1500);
     };
 
-    // Loading state
     if (isLoading) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[50vh]">
@@ -59,7 +54,6 @@ export default function CartPage() {
         );
     }
 
-    // Empty cart state
     if (isEmpty) {
         return (
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -92,8 +86,6 @@ export default function CartPage() {
                     {/* Mobile Cart View */}
                     <div className="block lg:hidden space-y-4">
                         {cartItems.map((item) => {
-                            // Use productId property that we've added to the CartItem interface
-                            // TypeScript will recognize this as optional, avoiding the need for 'any'
                             const productId = item.productId || item.id;
 
                             return (
@@ -231,7 +223,6 @@ export default function CartPage() {
                                 </thead>
                                 <tbody className="bg-card divide-y divide-border">
                                     {cartItems.map((item) => {
-                                        // Use productId property that we've added to the CartItem interface
                                         const productId = item.productId || item.id;
 
                                         return (
