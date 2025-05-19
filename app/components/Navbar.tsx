@@ -18,7 +18,7 @@ const navLinks = [
     { name: "Contact", href: "/contact" },
 ];
 
-// Logo URL from a clothing brand placeholder
+
 const LOGO_URL = "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/phalcon/phalcon-plain.svg";
 
 export default function Navbar() {
@@ -33,19 +33,15 @@ export default function Navbar() {
     const cartItemsCount = getCartCount();
     const clerk = useClerk();
 
-    // Check if user is admin
     const isAdmin = useQuery(api.users.isUserAdmin, userId ? { clerkId: userId } : "skip");
 
-    // Handle scroll events
     useEffect(() => {
         const handleScroll = () => {
             const currentScrollPos = window.scrollY;
             const scrollingDown = prevScrollPos < currentScrollPos;
             const scrollDelta = Math.abs(prevScrollPos - currentScrollPos);
 
-            // Only hide/show navbar if scrolling more than 10px and not at top of page
             if (scrollDelta > 10) {
-                // Always show navbar when at the top of the page
                 if (currentScrollPos <= 20) {
                     setVisible(true);
                 } else {
@@ -63,7 +59,6 @@ export default function Navbar() {
         setIsMenuOpen(!isMenuOpen);
     };
 
-    // Define transition classes
     const navbarClasses = `sticky z-50 w-full bg-background/80 backdrop-blur-md border-b border-border transition-transform duration-300 ${visible ? "top-0 translate-y-0" : "-translate-y-full"
         }`;
 
@@ -79,12 +74,10 @@ export default function Navbar() {
     const handleSignInClick = async (e: React.MouseEvent) => {
         e.preventDefault();
         try {
-            // Get the sign-in URL from Clerk
             const signInUrl = clerk.buildSignInUrl({
                 redirectUrl: window.location.href
             });
 
-            // Direct browser redirect
             window.location.href = signInUrl;
         } catch (error) {
             console.error("Error redirecting to sign in:", error);
@@ -94,12 +87,10 @@ export default function Navbar() {
     const handleSignUpClick = async (e: React.MouseEvent) => {
         e.preventDefault();
         try {
-            // Get the sign-up URL from Clerk
             const signUpUrl = clerk.buildSignUpUrl({
                 redirectUrl: window.location.href
             });
 
-            // Direct browser redirect
             window.location.href = signUpUrl;
         } catch (error) {
             console.error("Error redirecting to sign up:", error);
