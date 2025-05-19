@@ -16,11 +16,9 @@ export default function AdminDashboard() {
     const { isLoaded, isSignedIn } = useAuth();
     const [loading, setLoading] = useState(true);
 
-    // Check if user is admin
     const clerkId = user?.id;
     const isAdmin = useQuery(api.users.isUserAdmin, clerkId ? { clerkId } : "skip");
 
-    // Fetch products
     const productsResult = useQuery(api.products.listProducts, {});
     const products = productsResult || [];
 
@@ -29,10 +27,8 @@ export default function AdminDashboard() {
             if (!isSignedIn) {
                 redirect("/");
             } else if (isAdmin === false) {
-                // If we've confirmed user is not admin
                 redirect("/");
             } else if (isAdmin !== undefined) {
-                // Once we know the admin status
                 setLoading(false);
             }
         }
