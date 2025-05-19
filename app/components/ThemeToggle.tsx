@@ -8,7 +8,6 @@ export default function ThemeToggle() {
     const [isTransitioning, setIsTransitioning] = useState(false);
 
     useEffect(() => {
-        // Check for saved theme preference or system preference
         const savedTheme = localStorage.getItem("theme");
         const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
@@ -25,7 +24,6 @@ export default function ThemeToggle() {
         if (isTransitioning) return;
         setIsTransitioning(true);
 
-        // Create flash effect for better transition
         const flash = document.createElement('div');
         flash.style.position = 'fixed';
         flash.style.top = '0';
@@ -38,17 +36,16 @@ export default function ThemeToggle() {
         flash.style.transition = 'opacity 0.15s ease';
         document.body.appendChild(flash);
 
-        // Create the primary sliding background 
         const slidingBg = document.createElement('div');
         slidingBg.style.position = 'fixed';
         slidingBg.style.top = '0';
         slidingBg.style.left = '0';
         slidingBg.style.width = '100%';
         slidingBg.style.height = '100%';
-        slidingBg.style.backgroundColor = isDark ? 'white' : '#000000'; // Black for dark mode
+        slidingBg.style.backgroundColor = isDark ? 'white' : '#000000';
         slidingBg.style.zIndex = '9998';
         slidingBg.style.transform = 'translateY(100%)';
-        slidingBg.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)'; // Improved easing
+        slidingBg.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)';
         document.body.appendChild(slidingBg);
 
         // Create subtle gradient overlay for more depth
@@ -67,31 +64,25 @@ export default function ThemeToggle() {
         gradient.style.pointerEvents = 'none';
         document.body.appendChild(gradient);
 
-        // Get content element
         const contentElement = document.querySelector('#content-wrapper') || document.querySelector('main');
         const content = contentElement as HTMLElement;
 
-        // Start animation sequence
         setTimeout(() => {
-            // 0. Brief flash effect
             flash.style.opacity = '1';
             setTimeout(() => {
                 flash.style.opacity = '0';
             }, 100);
 
-            // 1. Push content up with fade
             if (content) {
                 content.style.transition = 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease';
                 content.style.opacity = '0';
                 content.style.transform = 'translateY(-35px)';
             }
 
-            // 2. Slide up background after short delay
             setTimeout(() => {
                 slidingBg.style.transform = 'translateY(0)';
                 gradient.style.opacity = '1';
 
-                // 3. When background reaches top, change theme
                 setTimeout(() => {
                     if (isDark) {
                         document.documentElement.classList.remove("dark");
@@ -103,17 +94,14 @@ export default function ThemeToggle() {
                         setIsDark(true);
                     }
 
-                    // 4. Continue background animation to slide out the top
                     slidingBg.style.transform = 'translateY(-100%)';
                     gradient.style.opacity = '0';
 
-                    // 5. Reset content position but keep it hidden
                     if (content) {
                         content.style.transition = 'none';
                         content.style.opacity = '0';
                         content.style.transform = 'translateY(30px)';
 
-                        // 6. Slide content back in from bottom
                         setTimeout(() => {
                             content.style.transition = 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease';
                             content.style.opacity = '1';
@@ -121,7 +109,6 @@ export default function ThemeToggle() {
                         }, 50);
                     }
 
-                    // 7. Clean up elements when animation completes
                     setTimeout(() => {
                         [flash, slidingBg, gradient].forEach(el => {
                             if (el.parentNode) {

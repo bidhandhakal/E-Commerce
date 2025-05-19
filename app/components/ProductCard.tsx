@@ -27,10 +27,9 @@ export default function ProductCard({ product, hideAddToCart = false }: ProductC
     const productUrl = `/products/${slug}`;
     const pathname = usePathname();
 
-    // Only show Add to Cart button on product detail pages AND when not explicitly hidden
+
     const showAddToCartButton = pathname.includes('/products/') && !hideAddToCart;
 
-    // Determine stock status
     const stockStatus = () => {
         const stock = product.stockQuantity;
 
