@@ -11,7 +11,6 @@ import { ArrowLeft } from "lucide-react";
 import { Id } from "../../../../../convex/_generated/dataModel";
 
 export default function EditProductPage() {
-    // Get the ID from URL params using the useParams hook
     const params = useParams();
     const id = params.id as string;
 
@@ -20,19 +19,15 @@ export default function EditProductPage() {
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
 
-    // Check if user is admin
     const clerkId = user?.id;
     const isAdmin = useQuery(api.users.isUserAdmin, clerkId ? { clerkId } : "skip");
 
-    // Get the product data
     const product = useQuery(api.products.getProduct, {
         id: id as Id<"products">
     });
 
-    // Function to update product
     const updateProduct = useMutation(api.products.updateProduct);
 
-    // Form state
     const [formData, setFormData] = useState({
         name: "",
         description: "",
@@ -48,13 +43,12 @@ export default function EditProductPage() {
         stock: 0,
     });
 
-    // Initialize form with product data when available
     useEffect(() => {
         if (product) {
             setFormData({
                 name: product.name,
                 description: product.description || "",
-                price: product.price / 100, // Convert from cents to display currency
+                price: product.price / 100,
                 originalPrice: (product.originalPrice || 0) / 100,
                 image: product.image,
                 category: product.category,
@@ -62,7 +56,7 @@ export default function EditProductPage() {
                 colors: product.colors ? product.colors.join(", ") : "",
                 isNew: product.isNew || false,
                 isSale: product.isSale || false,
-                isActive: product.isActive !== false, // default to true if undefined
+                isActive: product.isActive !== false,
                 stock: product.stock || 0,
             });
         }
@@ -73,10 +67,8 @@ export default function EditProductPage() {
             if (!isSignedIn) {
                 redirect("/");
             } else if (isAdmin === false) {
-                // If we've confirmed user is not admin
                 redirect("/");
             } else if (isAdmin !== undefined) {
-                // Once we know the admin status
                 setLoading(false);
             }
         }
@@ -97,7 +89,6 @@ export default function EditProductPage() {
             const checked = (e.target as HTMLInputElement).checked;
             setFormData(prev => ({ ...prev, [name]: checked }));
         } else if (name === "price" || name === "originalPrice" || name === "stock") {
-            // Convert price, originalPrice and stock to numbers
             const numValue = parseFloat(value) || 0;
             setFormData(prev => ({ ...prev, [name]: numValue }));
         } else {
@@ -112,7 +103,6 @@ export default function EditProductPage() {
         setSubmitting(true);
 
         try {
-            // Convert comma-separated strings to arrays
             const sizesArray = formData.sizes
                 ? formData.sizes.split(",").map(s => s.trim()).filter(Boolean)
                 : undefined;
@@ -121,14 +111,13 @@ export default function EditProductPage() {
                 ? formData.colors.split(",").map(c => c.trim()).filter(Boolean)
                 : undefined;
 
-            // Ensure stock is a number
             const stockValue = typeof formData.stock === 'number' ? formData.stock : parseInt(String(formData.stock), 10) || 0;
 
             await updateProduct({
                 id: id as Id<"products">,
                 name: formData.name,
                 description: formData.description || undefined,
-                price: Math.round(formData.price * 100), // Convert to cents
+                price: Math.round(formData.price * 100),
                 originalPrice: formData.originalPrice > 0 ? Math.round(formData.originalPrice * 100) : undefined,
                 image: formData.image,
                 category: formData.category,
@@ -141,7 +130,6 @@ export default function EditProductPage() {
                 clerkId: clerkId,
             });
 
-            // Use window.location instead of redirect for client components
             window.location.href = "/admin";
         } catch (error) {
             console.error("Error updating product:", error);

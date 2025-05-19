@@ -15,14 +15,12 @@ export default function NewProductPage() {
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
 
-    // Check if user is admin
     const clerkId = user?.id;
     const isAdmin = useQuery(api.users.isUserAdmin, clerkId ? { clerkId } : "skip");
 
-    // Function to add product
+
     const addProduct = useMutation(api.products.addProduct);
 
-    // Form state
     const [formData, setFormData] = useState({
         name: "",
         description: "",
@@ -43,10 +41,8 @@ export default function NewProductPage() {
             if (!isSignedIn) {
                 redirect("/");
             } else if (isAdmin === false) {
-                // If we've confirmed user is not admin
                 redirect("/");
             } else if (isAdmin !== undefined) {
-                // Once we know the admin status
                 setLoading(false);
             }
         }
@@ -67,7 +63,6 @@ export default function NewProductPage() {
             const checked = (e.target as HTMLInputElement).checked;
             setFormData(prev => ({ ...prev, [name]: checked }));
         } else if (name === "price" || name === "originalPrice" || name === "stock") {
-            // Convert to number and multiply by 100 if it's a price (stored in cents)
             const numValue = parseFloat(value) || 0;
             const finalValue = name === "stock" ? numValue : numValue * 100;
             setFormData(prev => ({ ...prev, [name]: finalValue }));
@@ -83,7 +78,6 @@ export default function NewProductPage() {
         setSubmitting(true);
 
         try {
-            // Convert comma-separated strings to arrays
             const sizesArray = formData.sizes
                 ? formData.sizes.split(",").map(s => s.trim()).filter(Boolean)
                 : undefined;
@@ -108,7 +102,6 @@ export default function NewProductPage() {
                 clerkId: clerkId,
             });
 
-            // Use window.location instead of redirect for client components
             window.location.href = "/admin";
         } catch (error) {
             console.error("Error adding product:", error);
