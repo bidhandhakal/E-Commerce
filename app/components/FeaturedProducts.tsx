@@ -6,13 +6,11 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
 export default function FeaturedProducts() {
-    // Fetch featured products - get 4 active products
     const productsResult = useQuery(api.products.listProducts, {
         skipInactive: true,
         limit: 4
     });
 
-    // Safely handle the products result
     const products = productsResult || [];
 
     return (
@@ -44,7 +42,6 @@ export default function FeaturedProducts() {
                             />
                         ))
                     ) : (
-                        // Placeholder cards when no products are available
                         Array(4).fill(0).map((_, index) => (
                             <div
                                 key={index}
