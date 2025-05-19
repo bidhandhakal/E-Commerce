@@ -12,7 +12,6 @@ import { Id } from "../../../../../convex/_generated/dataModel";
 import Image from "next/image";
 
 export default function DeleteProductPage() {
-    // Get the ID from URL params using the useParams hook
     const params = useParams();
     const id = params.id as string;
 
@@ -21,16 +20,13 @@ export default function DeleteProductPage() {
     const [loading, setLoading] = useState(true);
     const [deleting, setDeleting] = useState(false);
 
-    // Check if user is admin
     const clerkId = user?.id;
     const isAdmin = useQuery(api.users.isUserAdmin, clerkId ? { clerkId } : "skip");
 
-    // Get the product data
     const product = useQuery(api.products.getProduct, {
         id: id as Id<"products">
     });
 
-    // Function to delete product
     const deleteProduct = useMutation(api.products.deleteProduct);
 
     useEffect(() => {
@@ -38,10 +34,8 @@ export default function DeleteProductPage() {
             if (!isSignedIn) {
                 redirect("/");
             } else if (isAdmin === false) {
-                // If we've confirmed user is not admin
                 redirect("/");
             } else if (isAdmin !== undefined) {
-                // Once we know the admin status
                 setLoading(false);
             }
         }
@@ -66,7 +60,6 @@ export default function DeleteProductPage() {
                 clerkId: clerkId
             });
 
-            // Use window.location instead of redirect for client components
             window.location.href = "/admin";
         } catch (error) {
             console.error("Error deleting product:", error);
