@@ -15,28 +15,24 @@ export default function ProductDetailPage() {
     const { slug } = useParams();
     const productId = slug as string;
 
-    // State for selected options
+
     const [selectedSize, setSelectedSize] = useState<string | null>(null);
     const [selectedColor, setSelectedColor] = useState<string | null>(null);
     const [quantity, setQuantity] = useState(1);
 
-    // State for image zoom effect
     const [isZoomed, setIsZoomed] = useState(false);
     const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
     const [isDesktop, setIsDesktop] = useState(false);
     const imageContainerRef = useRef<HTMLDivElement>(null);
 
-    // Fetch the current product
     const product = useQuery(api.products.getProduct, {
         id: productId as Id<"products">
     });
 
-    // Fetch related products (same category)
     const relatedProducts = useQuery(api.products.listProducts, {
         skipInactive: true
     });
 
-    // Set default selected options when product loads
     useEffect(() => {
         if (product?.sizes?.length) {
             setSelectedSize(product.sizes[0]);
@@ -46,29 +42,22 @@ export default function ProductDetailPage() {
         }
     }, [product]);
 
-    // Filter related products - same category but not the current product
     const filteredRelatedProducts = relatedProducts?.filter(p =>
         p.category === product?.category &&
         p._id.toString() !== productId
     ) || [];
 
-    // Show up to 8 related products instead of 4
     const limitedRelatedProducts = filteredRelatedProducts.slice(0, 8);
 
-    // Detect if device is desktop (has hover capability)
     useEffect(() => {
-        // Check if we're in a browser environment
         if (typeof window !== 'undefined') {
-            // Initial check
             setIsDesktop(window.matchMedia('(min-width: 768px)').matches);
 
-            // Listen for changes
             const mediaQuery = window.matchMedia('(min-width: 768px)');
             const handleResize = (e: MediaQueryListEvent) => {
                 setIsDesktop(e.matches);
             };
 
-            // Modern browsers
             if (mediaQuery.addEventListener) {
                 mediaQuery.addEventListener('change', handleResize);
                 return () => mediaQuery.removeEventListener('change', handleResize);
@@ -87,14 +76,13 @@ export default function ProductDetailPage() {
     const isOnSale = product.originalPrice && product.originalPrice > product.price;
 
     const incrementQuantity = () => {
-        setQuantity(prev => Math.min(prev + 1, 10)); // Limit to 10 items
+        setQuantity(prev => Math.min(prev + 1, 10));
     };
 
     const decrementQuantity = () => {
-        setQuantity(prev => Math.max(prev - 1, 1)); // Minimum 1 item
+        setQuantity(prev => Math.max(prev - 1, 1));
     };
 
-    // Handle mouse movement for zoom effect - only on desktop
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
         if (!imageContainerRef.current || !isDesktop) return;
 
@@ -107,9 +95,7 @@ export default function ProductDetailPage() {
 
     return (
         <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 sm:py-8">
-            {/* Product Detail Section */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 lg:gap-8 mb-8 md:mb-10">
-                {/* Product Image with Zoom Effect - PC Only */}
                 <div
                     ref={imageContainerRef}
                     className={`relative aspect-square overflow-hidden rounded-lg bg-secondary ${isDesktop ? 'cursor-zoom-in' : ''}`}
