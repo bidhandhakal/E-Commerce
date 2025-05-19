@@ -4,7 +4,6 @@ import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
-// Fixed display time for the loading screen in milliseconds (4 seconds)
 const FIXED_LOADING_TIME = 4000;
 
 export default function LoadingScreen() {
@@ -14,13 +13,11 @@ export default function LoadingScreen() {
     const loadingRef = useRef<NodeJS.Timeout | null>(null);
     const [animationComplete, setAnimationComplete] = useState(false);
 
-    // Immediately set up critical rendering to prevent blank screen
     useLayoutEffect(() => {
         const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
         const savedTheme = localStorage.getItem("theme");
         const isDarkMode = savedTheme === "dark" || (!savedTheme && prefersDark);
 
-        // Apply background color directly
         document.documentElement.style.backgroundColor =
             isDarkMode ? 'oklch(1 0 0)' : 'oklch(0.141 0.005 285.823)';
         document.body.style.backgroundColor =
@@ -30,30 +27,23 @@ export default function LoadingScreen() {
     }, []);
 
     useEffect(() => {
-        // Always show the loading screen on every visit
-        // No longer checking for "hasLoadedBefore"
 
-        // Animate loading sequence
+
         const startTime = Date.now();
 
-        // Update loading progress
         const progressInterval = setInterval(() => {
             const elapsed = Date.now() - startTime;
             const progressPercent = Math.min((elapsed / FIXED_LOADING_TIME) * 100, 100);
 
-            // Update progress bar
             setProgress(progressPercent);
 
-            // Complete the loading sequence
             if (elapsed >= FIXED_LOADING_TIME) {
                 clearInterval(progressInterval);
                 setProgress(100);
 
-                // Animate out after loading completes
                 setTimeout(() => {
                     setTimeout(() => {
                         setAnimationComplete(true);
-                        // Wait for animation to complete before unmounting
                         setTimeout(() => setIsVisible(false), 800);
                     }, 200);
                 }, 300);
@@ -67,7 +57,6 @@ export default function LoadingScreen() {
         };
     }, []);
 
-    // Exit if not visible
     if (!isVisible) return null;
 
     return (
@@ -138,7 +127,7 @@ export default function LoadingScreen() {
                         animate={{ y: animationComplete ? "-100%" : 0 }}
                         transition={{
                             duration: 0.8,
-                            ease: [0.22, 1, 0.36, 1], // Custom cubic bezier for smooth slide
+                            ease: [0.22, 1, 0.36, 1],
                             delay: 0.1
                         }}
                         style={{
