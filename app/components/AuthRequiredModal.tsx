@@ -20,15 +20,12 @@ export default function AuthRequiredModal({
 
     const handleSignIn = async () => {
         try {
-            // Redirect to Clerk's hosted sign-in page
             onClose();
 
-            // Get the sign-in URL from Clerk
             const signInUrl = clerk.buildSignInUrl({
                 redirectUrl: window.location.href
             });
 
-            // Direct browser redirect
             window.location.href = signInUrl;
         } catch (error) {
             console.error("Error redirecting to sign in:", error);

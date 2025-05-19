@@ -42,38 +42,31 @@ export default function AddToCartButton({
     const [isAdding, setIsAdding] = useState(false);
     const [isAdded, setIsAdded] = useState(false);
 
-    // Check if the product is out of stock
     const isOutOfStock = product.stockQuantity !== undefined && product.stockQuantity <= 0;
 
     const handleAddToCart = async () => {
-        // Don't proceed if the product is out of stock
         if (isOutOfStock) return;
 
         setIsAdding(true);
 
         try {
-            // If the user is not signed in and requires authentication
             if (!isSignedIn) {
                 const isAuthorized = await requireAuth("You need to sign in to add items to your cart");
 
-                // If auth is required but user canceled, abort
                 if (!isAuthorized) {
                     setIsAdding(false);
                     return;
                 }
             }
 
-            // Create a product object with the custom options if provided
             const productToAdd = {
                 ...product,
                 size: customSize || product.size,
                 color: customColor || product.color,
             };
 
-            // Add item to cart (through CartContext) with custom quantity
             await addToCart(productToAdd, customQuantity);
 
-            // Show success state
             setIsAdded(true);
             setTimeout(() => {
                 setIsAdded(false);
@@ -85,21 +78,18 @@ export default function AddToCartButton({
         }
     };
 
-    // Button size classes
     const sizeClasses = {
         sm: "text-xs px-3 py-1.5",
         md: "text-sm px-4 py-2",
         lg: "text-base px-6 py-3",
     };
 
-    // Button variant classes
     const variantClasses = {
         default: "bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-105",
         outline: "border border-primary text-primary hover:bg-primary/10 hover:scale-105",
         subtle: "bg-primary/10 text-primary hover:bg-primary/20 hover:scale-105",
     };
 
-    // Combined classes based on props
     const buttonClasses = cn(
         "rounded-md font-medium transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer hover:shadow-sm",
         sizeClasses[size],

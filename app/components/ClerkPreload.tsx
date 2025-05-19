@@ -6,7 +6,6 @@ export default function ClerkPreload() {
     useEffect(() => {
         const preloadClerkResources = async () => {
             try {
-                // Preload Clerk's core JS files with high priority
                 const jsPreloadLinks = [
                     'https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js'
                 ];
@@ -20,9 +19,8 @@ export default function ClerkPreload() {
                     document.head.appendChild(linkPreload);
                 });
 
-                // Add DNS prefetch for Clerk domains
                 const dnsPrefetchDomains = [
-                    'https://clerk.luxera.com', // Replace with your actual Clerk domain
+                    'https://clerk.luxera.com',
                     'https://accounts.google.com',
                     'https://connect.facebook.net',
                     'https://appleid.apple.com'
