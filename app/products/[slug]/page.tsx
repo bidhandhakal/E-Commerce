@@ -287,9 +287,12 @@ export default function ProductDetailPage() {
             {limitedRelatedProducts.length > 0 && (
                 <div className="mt-6 sm:mt-8 md:mt-12">
                     <h2 className="text-base sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4 md:mb-6">You Might Also Like</h2>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3 md:gap-4">
-                        {limitedRelatedProducts.map((product) => (
-                            <div key={product._id.toString()}>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
+                        {limitedRelatedProducts.map((product, index) => (
+                            <div
+                                key={product._id.toString()}
+                                className={`${index % 2 === 0 ? "" : "transform translate-y-4"}`}
+                            >
                                 <ProductCard
                                     product={{
                                         id: product._id.toString(),
