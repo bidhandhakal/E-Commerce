@@ -10,21 +10,21 @@ export function useConvexAuth() {
     const { user } = useUser();
     const [isLoading, setIsLoading] = useState(true);
 
-    // Convex mutation to create or update a user
+
     const createOrUpdateUser = useMutation(api.users.createOrUpdateUser);
 
-    // Convex query to get user data
+
     const convexUser = useQuery(
         api.users.getUserByClerkId,
         isSignedIn && user?.id ? { clerkId: user.id } : "skip"
     );
 
-    // Sync user data from Clerk to Convex when user signs in
+
     useEffect(() => {
         const syncUser = async () => {
             if (isLoaded && isSignedIn && user) {
                 try {
-                    // Create or update user in Convex with data from Clerk
+
                     await createOrUpdateUser({
                         clerkId: user.id,
                         email: user.primaryEmailAddress?.emailAddress || "",
@@ -47,7 +47,7 @@ export function useConvexAuth() {
     return {
         isLoaded: isLoaded && !isLoading,
         isAuthenticated: !!isSignedIn,
-        user: convexUser, // Return the Convex user data
-        clerkUser: user,  // Also provide access to the Clerk user
+        user: convexUser,
+        clerkUser: user,
     };
 } 
