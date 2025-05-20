@@ -21,15 +21,14 @@ export default function ShopPage() {
     const [sortOption, setSortOption] = useState("newest");
     const [visibleProducts, setVisibleProducts] = useState(PRODUCTS_PER_PAGE);
 
-    // Fetch products
     const productsResult = useQuery(api.products.listProducts, {
         skipInactive: true
     });
 
-    // Safely handle products result
+
     const products = productsResult || [];
 
-    // Filter products based on selected category
+
     const filteredProducts = products.filter(product => {
         if (selectedCategory === "All") return true;
         if (selectedCategory === "Sale") return product.isSale === true;
@@ -37,7 +36,7 @@ export default function ShopPage() {
         return product.category === selectedCategory;
     });
 
-    // Sort products based on selected option
+
     const sortedProducts = [...filteredProducts].sort((a, b) => {
         switch (sortOption) {
             case "newest":
@@ -51,23 +50,23 @@ export default function ShopPage() {
         }
     });
 
-    // Get currently visible products
+
     const currentProducts = sortedProducts.slice(0, visibleProducts);
 
     const handleCategorySelect = (category: string) => {
         setSelectedCategory(category);
-        // Reset visible products when changing category
+
         setVisibleProducts(PRODUCTS_PER_PAGE);
     };
 
     const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSortOption(e.target.value);
-        // Reset visible products when changing sort
+
         setVisibleProducts(PRODUCTS_PER_PAGE);
     };
 
     const handleLoadMore = () => {
-        // Show next batch of products
+
         setVisibleProducts(prev => prev + PRODUCTS_PER_PAGE);
     };
 
