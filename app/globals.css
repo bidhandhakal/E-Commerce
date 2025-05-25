@@ -130,27 +130,50 @@
 
   /* Custom Scrollbar */
   ::-webkit-scrollbar {
-    width: 12px;
+    width: 8px;
+    height: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    background: var(--background);
+    background: transparent;
+    border-radius: 10px;
+    margin: 3px;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--primary);
-    border-radius: 6px;
-    border: 3px solid var(--background);
+    background: color-mix(in srgb, var(--primary) 70%, transparent);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    transition: all 0.3s ease;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--ring);
+    background: color-mix(in srgb, var(--ring) 80%, transparent);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: transparent;
   }
 
   /* Firefox */
   * {
     scrollbar-width: thin;
-    scrollbar-color: var(--primary) var(--background);
+    scrollbar-color: color-mix(in srgb, var(--primary) 70%, transparent) transparent;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    ::-webkit-scrollbar-thumb {
+      transition: background 0.3s ease;
+    }
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--primary) 80%, transparent);
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in srgb, var(--ring) 90%, transparent);
   }
 
   /* Ensures the background loads immediately to prevent white flashes */
@@ -221,6 +244,35 @@
 
 .fade-in-up {
   animation: fadeInUp 0.5s ease forwards;
+}
+
+/* Page Transition Effects */
+.page-enter {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.page-exit {
+  opacity: 1;
+}
+
+.page-exit-active {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 200ms, transform 200ms;
+}
+
+/* Prevent horizontal scrollbar during transitions */
+html,
+body {
+  overscroll-behavior-x: none;
+  overflow-x: hidden;
 }
 
 /* Improved Navbar Styling */

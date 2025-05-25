@@ -10,6 +10,7 @@ import { ClerkClientProvider } from "./providers/ClerkClientProvider";
 import { ConvexClientProvider } from "./providers/ConvexClientProvider";
 import ClerkPreload from "./components/ClerkPreload";
 import { Analytics } from '@vercel/analytics/react';
+import PageWrapper from "./page-wrapper";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -67,7 +68,11 @@ export default function RootLayout({
               <ClerkPreload />
               <div id="content-wrapper" className="flex min-h-screen flex-col bg-background">
                 <Navbar />
-                <main className="flex-1">{children}</main>
+                <main className="flex-1">
+                  <PageWrapper>
+                    {children}
+                  </PageWrapper>
+                </main>
                 <Footer />
               </div>
               <Analytics />
