@@ -24,6 +24,7 @@ export const createOrUpdateUser = mutation({
         const adminEmails = [
             "bidhandhakal365@gmail.com",
             "saugatoli808@gmail.com",
+            "ironveerfitnessfitness@gmail.com",
             "abhisanpardhe4@gmail.com"
         ];
 
